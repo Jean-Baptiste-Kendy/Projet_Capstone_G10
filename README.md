@@ -27,9 +27,9 @@ Il ne s'agit donc **pas d'un extrait officiel fourni par une institution**, mais
 | Fichier | Contenu | Origine | Rôle |
 |---|---|---|---|
 | `G10_Donnees2017_Services_Financiers_BRH.xlsx` | 29 variables brutes de services financiers (2017) | **Collecte manuelle** depuis le tableau public BRH | Offre de services par commune |
-| `population_commune_IHSI2024_G10_.xlsx` | Démographie officielle | IHSI 2024 | Population, ménages, superficie |
+| `population_commune_IHSI2024_G10.xlsx` | Démographie officielle | IHSI 2024 | Population, ménages, superficie |
 | `data/hti_admin_boundaries/hti_admin2.geojson` | Limites administratives communales (140 communes) | OCHA COD-AB | Géolocalisation, découpage territorial — **seul fichier du dossier `hti_admin_boundaries/` utilisé dans ce notebook** (le dossier contient aussi les niveaux admin0/1/3, capitales, lignes et points, conservés pour un usage cartographique futur) |
-| `base_communes_proxy_pauvrete_privation_avec_description.xlsx` | Pauvreté / privation spatiale (proxy) | Reconstruit à partir du rapport *Groupe de la Banque Mondiale (2022)*, basé sur la carte de pauvreté BID / Pokhriyal et al. (2014) | Contexte socio-économique (variables proxy) |
+| `base_communes_proxy_pauvrete_privation.xlsx` | Pauvreté / privation spatiale (proxy) | Reconstruit à partir du rapport *Groupe de la Banque Mondiale (2022)*, basé sur la carte de pauvreté BID / Pokhriyal et al. (2014) | Contexte socio-économique (variables proxy) |
 | Rapport *Enquête sur la Capacité et l'Inclusion Financière — Banque Mondiale, Haïti 2017* | Zones/strates WBG | Captures manuelles du rapport | Variables contextuelles (WBG 2017) |
 
 Toutes les sources sont croisées sur les **140 communes d'Haïti** (découpage IHSI 2024).
@@ -113,8 +113,8 @@ La liste complète des limites, avec leur impact et leur traitement, est documen
 │   │   ├── hti_adminlines.geojson / hti_adminlines_em.geojson  # Lignes de délimitation
 │   │   └── hti_adminpoints.geojson                          # Points de repère administratifs
 │   ├── G10_Donnees2017_Services_Financiers_BRH.xlsx
-│   ├── population_commune_IHSI2024_G10_.xlsx
-│   └── base_communes_proxy_pauvrete_privation_avec_description.xlsx
+│   ├── population_commune_IHSI2024_G10.xlsx
+│   └── base_communes_proxy_pauvrete_privation.xlsx
 ├── outputs/                                   # Exports (CSV, GeoJSON, dictionnaire de données finales)
 └── README.md
 ```
