@@ -28,7 +28,7 @@ Il ne s'agit donc **pas d'un extrait officiel fourni par une institution**, mais
 |---|---|---|---|
 | `G10_Donnees2017_Services_Financiers_BRH.xlsx` | 29 variables brutes de services financiers (2017) | **Collecte manuelle** depuis le tableau public BRH | Offre de services par commune |
 | `population_commune_IHSI2024_G10_.xlsx` | Démographie officielle | IHSI 2024 | Population, ménages, superficie |
-| `hti_admin2.geojson` | Limites administratives communales | OCHA COD-AB | Géolocalisation, découpage territorial |
+| `data/hti_admin_boundaries/hti_admin2.geojson` | Limites administratives communales (140 communes) | OCHA COD-AB | Géolocalisation, découpage territorial — **seul fichier du dossier `hti_admin_boundaries/` utilisé dans ce notebook** (le dossier contient aussi les niveaux admin0/1/3, capitales, lignes et points, conservés pour un usage cartographique futur) |
 | `base_communes_proxy_pauvrete_privation_avec_description.xlsx` | Pauvreté / privation spatiale (proxy) | Reconstruit à partir du rapport *Groupe de la Banque Mondiale (2022)*, basé sur la carte de pauvreté BID / Pokhriyal et al. (2014) | Contexte socio-économique (variables proxy) |
 | Rapport *Enquête sur la Capacité et l'Inclusion Financière — Banque Mondiale, Haïti 2017* | Zones/strates WBG | Captures manuelles du rapport | Variables contextuelles (WBG 2017) |
 
@@ -103,7 +103,18 @@ La liste complète des limites, avec leur impact et leur traitement, est documen
 ├── G10_Creation_Dictionnaire_Donnees.ipynb   # Ce notebook : préparation des données + dictionnaire final
 ├── (notebooks à venir : EDA, AFCM/IIFT, Clustering, Comparaison de modèles, Modélisation supervisée)
 ├── (application web Dash/Plotly à venir)
-├── data/                                      # Fichiers sources (BRH, IHSI, geojson, pauvreté)
+├── data/
+│   ├── hti_admin_boundaries/
+│   │   ├── hti_admin0.geojson / hti_admin0_em.geojson     # Frontière nationale
+│   │   ├── hti_admin1.geojson / hti_admin1_em.geojson     # Départements
+│   │   ├── hti_admin2.geojson / hti_admin2_em.geojson     # Communes (140) — utilisé dans ce notebook
+│   │   ├── hti_admin3.geojson / hti_admin3_em.geojson     # Sections communales
+│   │   ├── hti_admincapitals.geojson                       # Chefs-lieux
+│   │   ├── hti_adminlines.geojson / hti_adminlines_em.geojson  # Lignes de délimitation
+│   │   └── hti_adminpoints.geojson                          # Points de repère administratifs
+│   ├── G10_Donnees2017_Services_Financiers_BRH.xlsx
+│   ├── population_commune_IHSI2024_G10_.xlsx
+│   └── base_communes_proxy_pauvrete_privation_avec_description.xlsx
 ├── outputs/                                   # Exports (CSV, GeoJSON, dictionnaire de données finales)
 └── README.md
 ```
