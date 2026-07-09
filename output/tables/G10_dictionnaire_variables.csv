@@ -1,0 +1,58 @@
+﻿variable,type_pandas,type_statistique,nb_manquants,pct_manquants,nb_modalites,description,statut_selection
+id_commune,object,Identifiant,0,0.0,140,Identifiant unique de la commune (format C-001 à C-140),"Identifiant (traçabilité, hors analyse)"
+nom_commune,object,Identifiant,0,0.0,140,Nom de la commune,"Identifiant (traçabilité, hors analyse)"
+arrondissement,object,Identifiant,0,0.0,42,Arrondissement de rattachement,"Identifiant (traçabilité, hors analyse)"
+zone_wbg,object,Qualitative,0,0.0,3,Zone WBG 2017 (PAP / Connectée (RN) / Non-connectée (H-Ile)),"Retirée AFCM — V=0.99 avec strate (strate = zone_wbg x urbain_rural, déjà capturé)"
+urbain_rural,object,Qualitative,0,0.0,2,"Statut Urbain/Rural (seuil 50% population urbaine, dérivé IHSI)","Retirée AFCM — V=0.99 avec strate (seconde composante du croisement, déjà capturé)"
+strate,object,Qualitative,0,0.0,5,Strate WBG à 6 catégories (zone_wbg × urbain_rural),Active AFCM
+brh_maison_de_transfert,int64,Quantitative,0,0.0,-,Nb de points Maison de Transfert (BRH 2017),Active ACP
+brh_agent_non_bancaire,int64,Quantitative,0,0.0,-,"Nb d'agents non bancaires (MonCash/LajanCash, BRH 2017)",Active ACP
+brh_banque,int64,Quantitative,0,0.0,-,Nb d'agences bancaires (BRH 2017),Active ACP
+brh_atm,int64,Quantitative,0,0.0,-,Nb de guichets automatiques (BRH 2017),Active ACP
+brh_microfinance,int64,Quantitative,0,0.0,-,Nb de points de microfinance (BRH 2017),Active ACP
+brh_caisse_populaire,int64,Quantitative,0,0.0,-,Nb de caisses populaires (BRH 2017),Active ACP
+brh_total_effectif,int64,Quantitative,0,0.0,-,Effectif total de points de services financiers (BRH 2017),"Retirée ACP — = somme exacte des brh_* par type (banque+atm+microfinance+...), 100% redondant par construction"
+population_totale,int64,Quantitative,0,0.0,-,Population totale (IHSI 2024),Active ACP
+population_urbaine,int64,Quantitative,0,0.0,-,Population urbaine (IHSI 2024),Retirée ACP — = population_totale x part_urbaine (déjà capturé séparément)
+pop_masculine,int64,Quantitative,0,0.0,-,Population masculine totale (IHSI 2024),"Retirée ACP — r=1.00 avec population_totale (moitié hommes/femmes, non informatif seul)"
+pop_masculine_urbaine,int64,Quantitative,0,0.0,-,Population masculine résidant en zone urbaine (IHSI 2024),Retirée ACP — r=0.97 avec population_totale (désagrégation)
+pop_feminine,int64,Quantitative,0,0.0,-,Population féminine totale (IHSI 2024),Retirée ACP — r=1.00 avec population_totale
+pop_feminine_urbaine,int64,Quantitative,0,0.0,-,Population féminine résidant en zone urbaine (IHSI 2024),Retirée ACP — r=0.98 avec population_totale (désagrégation)
+pop_masculine_18_plus,int64,Quantitative,0,0.0,-,Population masculine âgée de 18 ans et plus (IHSI 2024),Retirée ACP — r=1.00 avec population_totale (structure d'âge quasi stable entre communes)
+pop_masculine_18_plus_urbaine,int64,Quantitative,0,0.0,-,Population masculine urbaine âgée de 18 ans et plus (IHSI 2024),Retirée ACP — r=0.97 avec population_totale (désagrégation)
+pop_feminine_18_plus,int64,Quantitative,0,0.0,-,Population féminine âgée de 18 ans et plus (IHSI 2024),Retirée ACP — r=1.00 avec population_totale
+pop_feminine_18_plus_urbaine,int64,Quantitative,0,0.0,-,Population féminine urbaine âgée de 18 ans et plus (IHSI 2024),Retirée ACP — r=0.97 avec population_totale (désagrégation)
+nb_menages,int64,Quantitative,0,0.0,-,Nombre de ménages (IHSI 2024),"Retirée ACP — r=1.00 avec population_totale (= population_totale / taille_moyenne_menage, déjà gardée)"
+nb_menages_urbains,int64,Quantitative,0,0.0,-,Nombre de ménages résidant en zone urbaine (IHSI 2024),Retirée ACP — r=0.97 avec population_totale (désagrégation)
+superficie_km2,float64,Quantitative,0,0.0,-,Superficie de la commune (km²),Active ACP
+superficie_urbaine_km2,float64,Quantitative,0,0.0,-,Superficie de la zone urbaine de la commune (km²),Active ACP
+taux_compte_formel,float64,Quantitative,0,0.0,-,% population avec compte bancaire formel (proxy WBG 2017),Active ACP
+taux_compte_mobile,float64,Quantitative,0,0.0,-,% population avec compte d'argent électronique (proxy WBG 2017),Active ACP
+taux_utilisation_OTA,float64,Quantitative,0,0.0,-,% utilisant les opérateurs de transfert d'argent (proxy WBG 2017),Active ACP
+score_connaissance_fka,float64,Quantitative,0,0.0,-,"Score de connaissance financière, échelle 0-8 (proxy WBG 2017)",Active ACP
+taux_connaissance_banque,float64,Quantitative,0,0.0,-,% connaissant les services bancaires (proxy WBG 2017),Active ACP
+taux_satisfaction_banque,float64,Quantitative,0,0.0,-,% satisfaits des services bancaires (proxy WBG 2017),Active ACP
+taux_epargne_formelle,float64,Quantitative,0,0.0,-,% épargnant en institution formelle (proxy WBG 2017),Active ACP
+taux_endettement_formel,float64,Quantitative,0,0.0,-,% avec dette formelle (proxy WBG 2017),Retirée ACP — r=0.91 avec taux_epargne_formelle et taux_internet -> signal le moins distinct du trio
+taux_telephone_mobile,float64,Quantitative,0,0.0,-,% possédant un téléphone mobile (proxy WBG 2017),Active ACP
+taux_internet,float64,Quantitative,0,0.0,-,% utilisant internet (proxy WBG 2017),Active ACP
+acces_routier,object,Qualitative,0,0.0,3,Accessibilité routière des points BRH (Proche/Moyen/Éloigné),Active AFCM
+classe_urbanisation,object,Qualitative,0,0.0,3,Classe d'urbanisation à 3 niveaux (Rurale/Mi-urbaine/Urbaine),Active AFCM
+classe_densite_demographique,object,Qualitative,0,0.0,3,Densité démographique en tertiles,Active AFCM
+classe_densite_bancaire,object,Qualitative,0,0.0,3,Densité de services bancaires en tertiles,Active AFCM
+classe_diversite_services,object,Qualitative,0,0.0,3,Diversité des types de services financiers présents,Active AFCM
+taux_pauvrete_proxy,float64,Quantitative,0,0.0,-,Taux de pauvreté communal estimé (proxy carte BID 2014),Retirée ACP — r=0.97 avec indice_privation_spatiale -> on garde l'indice composite
+indice_privation_spatiale,float64,Quantitative,0,0.0,-,"Indice composite de privation spatiale, 0 (faible) à 1 (forte)",Active ACP
+classe_privation_spatiale,object,Qualitative,0,0.0,3,Version qualitative (tertiles) de l'indice de privation spatiale,Active AFCM
+departement,object,Qualitative,0,0.0,10,Département administratif (10 modalités),Active AFCM
+classe_taille_population,object,Qualitative,0,0.0,3,Taille de la population en tertiles,Active AFCM
+classe_pauvrete,object,Qualitative,0,0.0,3,Taux de pauvreté en tertiles,Retirée AFCM — V=0.79 avec classe_privation_spatiale -> cohérent avec le choix fait en Section 10 (indice composite conservé)
+a_une_banque,object,Qualitative,0,0.0,2,Présence d'au moins une agence bancaire (Oui/Non),"Retirée AFCM — V=0.99 avec profil_services_financiers (résumé binaire, moins informatif)"
+profil_services_financiers,object,Qualitative,0,0.0,5,Typologie hiérarchique de l'offre financière formelle (5 modalités),Active AFCM
+classe_taille_menage,object,Qualitative,0,0.0,3,Taille moyenne des ménages en tertiles,Active AFCM
+part_urbaine,float64,Quantitative,0,0.0,-,Proportion de la population résidant en zone urbaine,Active ACP
+densite_hab_km2,float64,Quantitative,0,0.0,-,Densité de population (hab./km²),Active ACP
+densite_bancaire_10k,float64,Quantitative,0,0.0,-,Effectif BRH pour 10 000 habitants,Active ACP
+nb_types_services,int64,Quantitative,0,0.0,-,Nombre de types de services financiers présents (sur 6),Active ACP
+taille_moyenne_menage,float64,Quantitative,0,0.0,-,Population totale / nombre de ménages,Active ACP
+adm2_pcode,object,Identifiant,0,0.0,140,"Code administratif communal (OCHA COD-AB), ajouté en Section 2 pour la jointure geojson","Identifiant (traçabilité, hors analyse)"
