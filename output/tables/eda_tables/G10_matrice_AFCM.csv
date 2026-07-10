@@ -1,0 +1,141 @@
+﻿id_commune,nom_commune,arrondissement,adm2_pcode,strate,acces_routier,classe_urbanisation,classe_densite_demographique,classe_densite_bancaire,classe_diversite_services,classe_privation_spatiale,departement,classe_taille_population,profil_services_financiers,classe_taille_menage
+C-001,Port-au-Prince,Port-au-Prince,HT0111,Urbaine-PAP,Proche,Urbaine,Élevée,Élevée,Élevée,Faible,Ouest,Grande,Pôle financier complet,Moyenne
+C-002,Delmas,Port-au-Prince,HT0112,Urbaine-PAP,Proche,Urbaine,Élevée,Élevée,Élevée,Moyenne,Ouest,Grande,Pôle financier complet,Moyenne
+C-003,Cité Soleil,Port-au-Prince,HT0117,Urbaine-PAP,Proche,Urbaine,Élevée,Faible,Élevée,Élevée,Ouest,Grande,Pôle financier complet,Moyenne
+C-004,Tabarre,Port-au-Prince,HT0118,Urbaine-PAP,Proche,Urbaine,Élevée,Élevée,Élevée,Moyenne,Ouest,Grande,Pôle financier complet,Moyenne
+C-005,Carrefour,Port-au-Prince,HT0113,Urbaine-PAP,Proche,Urbaine,Élevée,Élevée,Élevée,Faible,Ouest,Grande,Pôle financier complet,Grande
+C-006,Pétion-Ville,Port-au-Prince,HT0114,Urbaine-PAP,Proche,Urbaine,Élevée,Élevée,Élevée,Moyenne,Ouest,Grande,Pôle financier complet,Moyenne
+C-007,Kenscoff,Port-au-Prince,HT0115,Urbaine-Connectée (RN),Moyen,Urbaine,Moyenne,Moyenne,Moyenne,Élevée,Ouest,Moyenne,Caisse populaire uniquement,Petite
+C-008,Gressier,Port-au-Prince,HT0116,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Moyenne,Élevée,Moyenne,Moyenne,Ouest,Petite,Caisse populaire uniquement,Petite
+C-009,Léogâne,Léogâne,HT0121,Urbaine-Connectée (RN),Proche,Urbaine,Élevée,Élevée,Élevée,Élevée,Ouest,Grande,Pôle financier complet,Petite
+C-010,Petit-Goâve,Léogâne,HT0122,Urbaine-Non-connectée (H-Ile),Moyen,Urbaine,Élevée,Élevée,Élevée,Faible,Ouest,Grande,Pôle financier complet,Petite
+C-011,Grand-Goâve,Léogâne,HT0123,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Élevée,Faible,Élevée,Élevée,Ouest,Grande,Caisse populaire uniquement,Petite
+C-012,Croix-des-Bouquets,Croix-des-Bouquets,HT0131,Urbaine-PAP,Proche,Urbaine,Moyenne,Élevée,Élevée,Moyenne,Ouest,Grande,Pôle financier complet,Moyenne
+C-013,Thomazeau,Croix-des-Bouquets,HT0132,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Faible,Moyenne,Moyenne,Faible,Ouest,Moyenne,Aucune institution formelle,Petite
+C-014,Ganthier,Croix-des-Bouquets,HT0133,Urbaine-Non-connectée (H-Ile),Moyen,Urbaine,Faible,Élevée,Élevée,Faible,Ouest,Moyenne,Microfinance sans banque,Grande
+C-015,Cornillon,Croix-des-Bouquets,HT0134,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Moyenne,Faible,Moyenne,Moyenne,Ouest,Moyenne,Microfinance sans banque,Moyenne
+C-016,Fonds-Verrettes,Croix-des-Bouquets,HT0135,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Faible,Moyenne,Moyenne,Faible,Ouest,Moyenne,Microfinance sans banque,Moyenne
+C-017,Arcahaie,Arcahaie,HT0141,Urbaine-Connectée (RN),Éloigné,Urbaine,Moyenne,Moyenne,Élevée,Élevée,Ouest,Grande,Caisse populaire uniquement,Petite
+C-018,Cabaret,Arcahaie,HT0142,Urbaine-Connectée (RN),Proche,Urbaine,Moyenne,Élevée,Élevée,Élevée,Ouest,Grande,Pôle financier complet,Petite
+C-019,Anse-à-Galets,La Gonâve,HT0151,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Faible,Élevée,Élevée,Faible,Ouest,Grande,Bancarisé,Moyenne
+C-020,Pointe-à-Raquette,La Gonâve,HT0152,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Faible,Élevée,Moyenne,Élevée,Ouest,Petite,Aucune institution formelle,Petite
+C-021,Jacmel,Jacmel,HT0211,Rurale-Connectée (RN),Moyen,Mi-urbaine,Élevée,Élevée,Élevée,Faible,Sud-Est,Grande,Pôle financier complet,Petite
+C-022,Marigot,Jacmel,HT0212,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Élevée,Élevée,Élevée,Sud-Est,Grande,Microfinance sans banque,Moyenne
+C-023,Cayes-Jacmel,Jacmel,HT0213,Rurale-Non-connectée (H-Ile),Moyen,Rurale,Élevée,Élevée,Moyenne,Élevée,Sud-Est,Moyenne,Caisse populaire uniquement,Moyenne
+C-024,La Vallée de Jacmel,Jacmel,HT0214,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Élevée,Élevée,Moyenne,Sud-Est,Moyenne,Microfinance sans banque,Moyenne
+C-025,Bainet,Bainet,HT0221,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Moyenne,Moyenne,Faible,Sud-Est,Grande,Aucune institution formelle,Petite
+C-026,Côtes-de-Fer,Bainet,HT0222,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Faible,Moyenne,Faible,Sud-Est,Moyenne,Aucune institution formelle,Moyenne
+C-027,Belle-Anse,Belle-Anse,HT0231,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Moyenne,Moyenne,Élevée,Sud-Est,Grande,Caisse populaire uniquement,Moyenne
+C-028,Grand-Gosier,Belle-Anse,HT0232,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Faible,Faible,Élevée,Sud-Est,Petite,Aucune institution formelle,Petite
+C-029,Thiotte,Belle-Anse,HT0233,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Élevée,Élevée,Faible,Sud-Est,Moyenne,Microfinance sans banque,Petite
+C-030,Anse-à-Pitre,Belle-Anse,HT0234,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Faible,Moyenne,Faible,Sud-Est,Petite,Microfinance sans banque,Petite
+C-031,Cap-Haïtien,Cap-Haïtien,HT0311,Urbaine-Connectée (RN),Proche,Urbaine,Élevée,Élevée,Élevée,Faible,Nord,Grande,Pôle financier complet,Grande
+C-032,Quartier-Morin,Cap-Haïtien,HT0312,Rurale-Connectée (RN),Proche,Mi-urbaine,Élevée,Élevée,Moyenne,Élevée,Nord,Petite,Aucune institution formelle,Moyenne
+C-033,Limonade,Cap-Haïtien,HT0313,Urbaine-Connectée (RN),Proche,Mi-urbaine,Élevée,Moyenne,Moyenne,Moyenne,Nord,Moyenne,Caisse populaire uniquement,Moyenne
+C-034,Acul-du-Nord,Acul-du-Nord,HT0321,Urbaine-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Moyenne,Faible,Moyenne,Faible,Nord,Moyenne,Aucune institution formelle,Grande
+C-035,Plaine-du-Nord,Acul-du-Nord,HT0322,Urbaine-Connectée (RN),Proche,Mi-urbaine,Élevée,Élevée,Moyenne,Moyenne,Nord,Moyenne,Caisse populaire uniquement,Moyenne
+C-036,Milot,Acul-du-Nord,HT0323,Urbaine-Connectée (RN),Proche,Mi-urbaine,Élevée,Moyenne,Élevée,Moyenne,Nord,Petite,Microfinance sans banque,Grande
+C-037,Grande-Rivière-du-Nord,Grande-Rivière-du-Nord,HT0331,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Moyenne,Faible,Moyenne,Moyenne,Nord,Moyenne,Aucune institution formelle,Petite
+C-038,Bahon,Grande-Rivière-du-Nord,HT0332,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Moyenne,Faible,Nord,Petite,Aucune institution formelle,Moyenne
+C-039,Saint-Raphaël,Saint-Raphaël,HT0341,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Élevée,Moyenne,Moyenne,Nord,Moyenne,Microfinance sans banque,Moyenne
+C-040,Dondon,Saint-Raphaël,HT0342,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Moyenne,Moyenne,Nord,Moyenne,Aucune institution formelle,Moyenne
+C-041,Ranquitte,Saint-Raphaël,HT0343,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Faible,Élevée,Nord,Petite,Aucune institution formelle,Grande
+C-042,Pignon,Saint-Raphaël,HT0344,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Élevée,Moyenne,Moyenne,Nord,Moyenne,Microfinance sans banque,Moyenne
+C-043,La Victoire,Saint-Raphaël,HT0345,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Moyenne,Moyenne,Moyenne,Faible,Nord,Petite,Caisse populaire uniquement,Grande
+C-044,Borgne,Borgne,HT0351,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Faible,Faible,Nord,Grande,Aucune institution formelle,Grande
+C-045,Port-Margot,Borgne,HT0352,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Élevée,Élevée,Élevée,Faible,Nord,Moyenne,Microfinance sans banque,Grande
+C-046,Limbé,Limbé,HT0361,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Élevée,Moyenne,Élevée,Élevée,Nord,Grande,Bancarisé,Grande
+C-047,Bas-Limbé,Limbé,HT0362,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Élevée,Moyenne,Moyenne,Élevée,Nord,Petite,Aucune institution formelle,Grande
+C-048,Plaisance,Plaisance,HT0371,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Moyenne,Moyenne,Moyenne,Nord,Grande,Caisse populaire uniquement,Grande
+C-049,Pilate,Plaisance,HT0372,Rurale-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Élevée,Moyenne,Élevée,Moyenne,Nord,Moyenne,Microfinance sans banque,Grande
+C-050,Fort-Liberté,Fort-Liberté,HT0411,Urbaine-Connectée (RN),Proche,Urbaine,Faible,Élevée,Élevée,Faible,Nord-Est,Moyenne,Pôle financier complet,Moyenne
+C-051,Ferrier,Fort-Liberté,HT0412,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Faible,Moyenne,Moyenne,Faible,Nord-Est,Petite,Caisse populaire uniquement,Petite
+C-052,Perches,Fort-Liberté,HT0413,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Moyenne,Élevée,Moyenne,Faible,Nord-Est,Petite,Caisse populaire uniquement,Grande
+C-053,Ouanaminthe,Ouanaminthe,HT0421,Urbaine-Connectée (RN),Proche,Urbaine,Élevée,Moyenne,Élevée,Faible,Nord-Est,Grande,Pôle financier complet,Grande
+C-054,Capotille,Ouanaminthe,HT0422,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Faible,Moyenne,Élevée,Nord-Est,Petite,Aucune institution formelle,Grande
+C-055,Mont-Organisé,Ouanaminthe,HT0423,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Moyenne,Moyenne,Moyenne,Nord-Est,Petite,Microfinance sans banque,Grande
+C-056,Trou-du-Nord,Trou-du-Nord,HT0431,Urbaine-Connectée (RN),Proche,Urbaine,Moyenne,Élevée,Moyenne,Élevée,Nord-Est,Moyenne,Microfinance sans banque,Grande
+C-057,Sainte-Suzanne,Trou-du-Nord,HT0432,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Faible,Moyenne,Faible,Nord-Est,Petite,Aucune institution formelle,Moyenne
+C-058,Terrier-Rouge,Trou-du-Nord,HT0433,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Faible,Moyenne,Moyenne,Élevée,Nord-Est,Petite,Caisse populaire uniquement,Moyenne
+C-059,Caracol,Trou-du-Nord,HT0434,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Faible,Élevée,Élevée,Faible,Nord-Est,Petite,Bancarisé,Petite
+C-060,Vallières,Vallières,HT0441,Rurale-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Faible,Faible,Moyenne,Élevée,Nord-Est,Petite,Aucune institution formelle,Grande
+C-061,Carice,Vallières,HT0442,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Moyenne,Moyenne,Élevée,Nord-Est,Petite,Caisse populaire uniquement,Moyenne
+C-062,Mombin-Crochu,Vallières,HT0443,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Faible,Moyenne,Élevée,Nord-Est,Moyenne,Caisse populaire uniquement,Grande
+C-063,Gonaïves,Gonaïves,HT0511,Urbaine-Connectée (RN),Proche,Urbaine,Élevée,Élevée,Élevée,Faible,Artibonite,Grande,Pôle financier complet,Grande
+C-064,Ennery,Gonaïves,HT0512,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Faible,Moyenne,Élevée,Artibonite,Moyenne,Aucune institution formelle,Petite
+C-065,Estère,Gonaïves,HT0513,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Moyenne,Moyenne,Moyenne,Faible,Artibonite,Moyenne,Microfinance sans banque,Petite
+C-066,Gros-Morne,Gros-Morne,HT0521,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Faible,Élevée,Élevée,Artibonite,Grande,Microfinance sans banque,Moyenne
+C-067,Terre-Neuve,Gros-Morne,HT0522,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Faible,Moyenne,Faible,Artibonite,Petite,Aucune institution formelle,Petite
+C-068,Anse-Rouge,Gros-Morne,HT0523,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Faible,Moyenne,Élevée,Artibonite,Moyenne,Caisse populaire uniquement,Petite
+C-069,Saint-Marc,Saint-Marc,HT0531,Urbaine-Connectée (RN),Proche,Urbaine,Élevée,Élevée,Élevée,Élevée,Artibonite,Grande,Pôle financier complet,Moyenne
+C-070,Verrettes,Saint-Marc,HT0532,Urbaine-Connectée (RN),Proche,Mi-urbaine,Élevée,Faible,Moyenne,Moyenne,Artibonite,Grande,Caisse populaire uniquement,Petite
+C-071,La Chapelle,Saint-Marc,HT0533,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Faible,Moyenne,Moyenne,Artibonite,Petite,Aucune institution formelle,Petite
+C-072,Dessalines,Dessalines,HT0541,Rurale-Connectée (RN),Proche,Mi-urbaine,Élevée,Faible,Élevée,Moyenne,Artibonite,Grande,Microfinance sans banque,Petite
+C-073,Petite-Rivière-de-l'Artibonite,Dessalines,HT0542,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Élevée,Moyenne,Artibonite,Grande,Microfinance sans banque,Petite
+C-074,Grande-Saline,Dessalines,HT0543,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Faible,Moyenne,Faible,Artibonite,Petite,Aucune institution formelle,Petite
+C-075,Desdunes,Dessalines,HT0544,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Moyenne,Moyenne,Moyenne,Moyenne,Artibonite,Moyenne,Caisse populaire uniquement,Petite
+C-076,Saint-Michel-de-l'Attalaye,Marmelade,HT0551,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Élevée,Faible,Artibonite,Grande,Microfinance sans banque,Petite
+C-077,Marmelade,Marmelade,HT0552,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Élevée,Moyenne,Artibonite,Moyenne,Microfinance sans banque,Grande
+C-078,Hinche,Hinche,HT0611,Urbaine-Connectée (RN),Proche,Mi-urbaine,Faible,Élevée,Élevée,Élevée,Centre,Grande,Pôle financier complet,Moyenne
+C-079,Maïssade,Hinche,HT0612,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Moyenne,Élevée,Élevée,Centre,Grande,Microfinance sans banque,Moyenne
+C-080,Thomonde,Hinche,HT0613,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Moyenne,Élevée,Moyenne,Centre,Grande,Microfinance sans banque,Moyenne
+C-081,Cerca-Carvajal,Hinche,HT0614,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Moyenne,Moyenne,Faible,Centre,Petite,Aucune institution formelle,Grande
+C-082,Mirebalais,Mirebalais,HT0621,Rurale-Connectée (RN),Proche,Mi-urbaine,Moyenne,Élevée,Élevée,Élevée,Centre,Grande,Pôle financier complet,Petite
+C-083,Saut-d'Eau,Mirebalais,HT0622,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Moyenne,Élevée,Faible,Centre,Moyenne,Microfinance sans banque,Petite
+C-084,Boucan-Carré,Mirebalais,HT0623,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Faible,Moyenne,Élevée,Centre,Grande,Microfinance sans banque,Petite
+C-085,Lascahobas,Lascahobas,HT0631,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Élevée,Élevée,Faible,Centre,Moyenne,Microfinance sans banque,Moyenne
+C-086,Belladère,Lascahobas,HT0632,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Moyenne,Élevée,Centre,Grande,Microfinance sans banque,Moyenne
+C-087,Savanette,Lascahobas,HT0633,Rurale-Non-connectée (H-Ile),Moyen,Rurale,Faible,Faible,Moyenne,Élevée,Centre,Moyenne,Caisse populaire uniquement,Petite
+C-088,Cerca-la-Source,Cerca-la-Source,HT0641,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Faible,Faible,Faible,Centre,Grande,Aucune institution formelle,Grande
+C-089,Thomassique,Cerca-la-Source,HT0642,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Moyenne,Moyenne,Élevée,Centre,Grande,Microfinance sans banque,Grande
+C-090,Les Cayes,Les Cayes,HT0711,Urbaine-Connectée (RN),Proche,Urbaine,Élevée,Élevée,Élevée,Moyenne,Sud,Grande,Pôle financier complet,Moyenne
+C-091,Torbeck,Les Cayes,HT0712,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Faible,Moyenne,Élevée,Sud,Grande,Aucune institution formelle,Grande
+C-092,Chantal,Les Cayes,HT0713,Rurale-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Faible,Faible,Moyenne,Moyenne,Sud,Moyenne,Aucune institution formelle,Moyenne
+C-093,Camp-Perrin,Les Cayes,HT0714,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Élevée,Élevée,Faible,Sud,Moyenne,Microfinance sans banque,Grande
+C-094,Maniche,Les Cayes,HT0715,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Faible,Moyenne,Faible,Sud,Petite,Caisse populaire uniquement,Moyenne
+C-095,Île-à-Vache,Les Cayes,HT0716,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Moyenne,Faible,Sud,Petite,Aucune institution formelle,Grande
+C-096,Port-Salut,Port-Salut,HT0721,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Élevée,Moyenne,Élevée,Sud,Petite,Caisse populaire uniquement,Moyenne
+C-097,Saint-Jean-du-Sud,Port-Salut,HT0722,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Moyenne,Moyenne,Élevée,Sud,Petite,Aucune institution formelle,Moyenne
+C-098,Arniquet,Port-Salut,HT0723,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Faible,Moyenne,Élevée,Sud,Petite,Caisse populaire uniquement,Grande
+C-099,Aquin,Aquin,HT0731,Rurale-Connectée (RN),Éloigné,Mi-urbaine,Faible,Élevée,Moyenne,Élevée,Sud,Grande,Microfinance sans banque,Moyenne
+C-100,Saint-Louis-du-Sud,Aquin,HT0732,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Élevée,Moyenne,Moyenne,Moyenne,Sud,Grande,Caisse populaire uniquement,Grande
+C-101,Cavaillon,Aquin,HT0733,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Moyenne,Moyenne,Moyenne,Sud,Moyenne,Caisse populaire uniquement,Petite
+C-102,Côteaux,Côteaux,HT0741,Urbaine-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Moyenne,Moyenne,Élevée,Moyenne,Sud,Petite,Microfinance sans banque,Moyenne
+C-103,Port-à-Piment,Côteaux,HT0742,Urbaine-Non-connectée (H-Ile),Éloigné,Urbaine,Moyenne,Moyenne,Moyenne,Élevée,Sud,Petite,Caisse populaire uniquement,Grande
+C-104,Roche-à-Bateau,Côteaux,HT0743,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Moyenne,Moyenne,Moyenne,Sud,Petite,Aucune institution formelle,Grande
+C-105,Chardonnières,Chardonnières,HT0751,Urbaine-Non-connectée (H-Ile),Moyen,Mi-urbaine,Faible,Élevée,Moyenne,Faible,Sud,Petite,Caisse populaire uniquement,Grande
+C-106,Les Anglais,Chardonnières,HT0752,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Faible,Moyenne,Élevée,Sud,Petite,Aucune institution formelle,Grande
+C-107,Tiburon,Chardonnières,HT0753,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Faible,Moyenne,Moyenne,Sud,Petite,Aucune institution formelle,Grande
+C-108,Jérémie,Jérémie,HT0811,Urbaine-Connectée (RN),Proche,Mi-urbaine,Moyenne,Élevée,Élevée,Élevée,Grand'Anse,Grande,Pôle financier complet,Moyenne
+C-109,Abricots,Jérémie,HT0812,Rurale-Non-connectée (H-Ile),Moyen,Rurale,Élevée,Faible,Moyenne,Faible,Grand'Anse,Moyenne,Caisse populaire uniquement,Grande
+C-110,Bonbon,Jérémie,HT0813,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Moyenne,Moyenne,Moyenne,Grand'Anse,Petite,Aucune institution formelle,Moyenne
+C-111,Moron,Jérémie,HT0814,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Faible,Moyenne,Élevée,Grand'Anse,Moyenne,Aucune institution formelle,Grande
+C-112,Chambellan,Jérémie,HT0815,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Moyenne,Moyenne,Élevée,Grand'Anse,Petite,Aucune institution formelle,Grande
+C-113,Anse-d'Hainault,Anse-d'Hainault,HT0821,Urbaine-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Élevée,Moyenne,Élevée,Moyenne,Grand'Anse,Moyenne,Microfinance sans banque,Grande
+C-114,Dame-Marie,Anse-d'Hainault,HT0822,Urbaine-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Moyenne,Moyenne,Faible,Grand'Anse,Moyenne,Caisse populaire uniquement,Moyenne
+C-115,Les Irois,Anse-d'Hainault,HT0823,Urbaine-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Faible,Moyenne,Moyenne,Faible,Grand'Anse,Petite,Aucune institution formelle,Grande
+C-116,Corail,Corail,HT0831,Rurale-Connectée (RN),Éloigné,Mi-urbaine,Faible,Élevée,Moyenne,Moyenne,Grand'Anse,Petite,Aucune institution formelle,Moyenne
+C-117,Roseaux,Corail,HT0832,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Moyenne,Moyenne,Élevée,Grand'Anse,Moyenne,Aucune institution formelle,Petite
+C-118,Beaumont,Corail,HT0833,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Faible,Moyenne,Élevée,Moyenne,Grand'Anse,Moyenne,Microfinance sans banque,Petite
+C-119,Pestel,Corail,HT0834,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Élevée,Moyenne,Moyenne,Grand'Anse,Moyenne,Caisse populaire uniquement,Moyenne
+C-120,Port-de-Paix,Port-de-Paix,HT0911,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Élevée,Élevée,Élevée,Moyenne,Nord-Ouest,Grande,Pôle financier complet,Grande
+C-121,La Tortue,Port-de-Paix,HT0912,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Moyenne,Moyenne,Moyenne,Nord-Ouest,Moyenne,Aucune institution formelle,Grande
+C-122,Bassin-Bleu,Port-de-Paix,HT0913,Rurale-Non-connectée (H-Ile),Moyen,Rurale,Moyenne,Faible,Moyenne,Élevée,Nord-Ouest,Grande,Aucune institution formelle,Grande
+C-123,Chansolme,Port-de-Paix,HT0914,Rurale-Non-connectée (H-Ile),Proche,Rurale,Élevée,Faible,Moyenne,Faible,Nord-Ouest,Petite,Aucune institution formelle,Grande
+C-124,Saint-Louis-du-Nord,Saint-Louis-du-Nord,HT0921,Urbaine-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Élevée,Moyenne,Moyenne,Faible,Nord-Ouest,Grande,Caisse populaire uniquement,Grande
+C-125,Anse-à-Foleur,Saint-Louis-du-Nord,HT0922,Rurale-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Élevée,Moyenne,Moyenne,Faible,Nord-Ouest,Petite,Aucune institution formelle,Grande
+C-126,Môle-Saint-Nicolas,Môle-Saint-Nicolas,HT0931,Rurale-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Faible,Moyenne,Moyenne,Faible,Nord-Ouest,Moyenne,Caisse populaire uniquement,Grande
+C-127,Baie-de-Henne,Môle-Saint-Nicolas,HT0932,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Faible,Moyenne,Moyenne,Élevée,Nord-Ouest,Petite,Caisse populaire uniquement,Moyenne
+C-128,Bombardopolis,Môle-Saint-Nicolas,HT0933,Rurale-Non-connectée (H-Ile),Proche,Rurale,Faible,Moyenne,Moyenne,Moyenne,Nord-Ouest,Moyenne,Aucune institution formelle,Petite
+C-129,Jean-Rabel,Môle-Saint-Nicolas,HT0934,Rurale-Non-connectée (H-Ile),Éloigné,Rurale,Moyenne,Moyenne,Élevée,Moyenne,Nord-Ouest,Grande,Microfinance sans banque,Moyenne
+C-130,Miragoâne,Miragoâne,HT1011,Urbaine-Connectée (RN),Proche,Mi-urbaine,Moyenne,Élevée,Élevée,Élevée,Nippes,Grande,Pôle financier complet,Petite
+C-131,Petite-Rivière-de-Nippes,Miragoâne,HT1012,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Élevée,Élevée,Faible,Nippes,Petite,Microfinance sans banque,Petite
+C-132,Fonds-des-Nègres,Miragoâne,HT1013,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Élevée,Élevée,Élevée,Moyenne,Nippes,Moyenne,Bancarisé,Petite
+C-133,Paillant,Miragoâne,HT1014,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Élevée,Élevée,Moyenne,Nippes,Petite,Bancarisé,Petite
+C-134,Anse-à-Veau,Anse-à-Veau,HT1021,Rurale-Connectée (RN),Proche,Mi-urbaine,Moyenne,Faible,Moyenne,Élevée,Nippes,Moyenne,Aucune institution formelle,Petite
+C-135,Petit-Trou-de-Nippes,Anse-à-Veau,HT1022,Urbaine-Non-connectée (H-Ile),Éloigné,Mi-urbaine,Faible,Faible,Moyenne,Moyenne,Nippes,Petite,Aucune institution formelle,Petite
+C-136,L'Asile,Anse-à-Veau,HT1023,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Élevée,Moyenne,Moyenne,Nippes,Moyenne,Caisse populaire uniquement,Petite
+C-137,Arnaud,Anse-à-Veau,HT1024,Rurale-Non-connectée (H-Ile),Proche,Mi-urbaine,Moyenne,Moyenne,Moyenne,Moyenne,Nippes,Petite,Aucune institution formelle,Petite
+C-138,Plaisance-du-Sud,Anse-à-Veau,HT1025,Rurale-Non-connectée (H-Ile),Proche,Rurale,Moyenne,Faible,Faible,Faible,Nippes,Petite,Aucune institution formelle,Petite
+C-139,Baradères,Baradères,HT1031,Rurale-Non-connectée (H-Ile),Moyen,Rurale,Faible,Faible,Moyenne,Faible,Nippes,Moyenne,Aucune institution formelle,Petite
+C-140,Grand-Boucan,Baradères,HT1032,Urbaine-Non-connectée (H-Ile),Proche,Urbaine,Faible,Faible,Faible,Moyenne,Nippes,Petite,Aucune institution formelle,Petite

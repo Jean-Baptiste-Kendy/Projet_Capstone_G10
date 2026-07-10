@@ -1,0 +1,12 @@
+﻿variable,type_pandas,type_statistique,nb_manquants,pct_manquants,nb_modalites,description,statut_selection,utilisation,role
+strate,object,Qualitative,0,0.0,5,Strate WBG à 6 catégories (zone_wbg × urbain_rural),Active AFCM,AFCM,Variable qualitative active
+acces_routier,object,Qualitative,0,0.0,3,Accessibilité routière des points BRH (Proche/Moyen/Éloigné),Active AFCM,AFCM,Variable qualitative active
+classe_urbanisation,object,Qualitative,0,0.0,3,Classe d'urbanisation à 3 niveaux (Rurale/Mi-urbaine/Urbaine),Active AFCM,AFCM,Variable qualitative active
+classe_densite_demographique,object,Qualitative,0,0.0,3,Densité démographique en tertiles,Active AFCM,AFCM,Variable qualitative active
+classe_densite_bancaire,object,Qualitative,0,0.0,3,Densité de services bancaires en tertiles,Active AFCM,AFCM,Variable qualitative active
+classe_diversite_services,object,Qualitative,0,0.0,3,Diversité des types de services financiers présents,Active AFCM,AFCM,Variable qualitative active
+classe_privation_spatiale,object,Qualitative,0,0.0,3,Version qualitative (tertiles) de l'indice de privation spatiale,Active AFCM,AFCM,Variable qualitative active
+departement,object,Qualitative,0,0.0,10,Département administratif (10 modalités),Active AFCM,AFCM,Variable qualitative active
+classe_taille_population,object,Qualitative,0,0.0,3,Taille de la population en tertiles,Active AFCM,AFCM,Variable qualitative active
+profil_services_financiers,object,Qualitative,0,0.0,5,Typologie hiérarchique de l'offre financière formelle (5 modalités),Active AFCM,AFCM,Variable qualitative active
+classe_taille_menage,object,Qualitative,0,0.0,3,Taille moyenne des ménages en tertiles,Active AFCM,AFCM,Variable qualitative active

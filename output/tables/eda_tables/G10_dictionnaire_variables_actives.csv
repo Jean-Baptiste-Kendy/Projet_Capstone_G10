@@ -1,0 +1,40 @@
+﻿variable,type_pandas,type_statistique,nb_manquants,pct_manquants,nb_modalites,description,statut_selection
+id_commune,object,Identifiant,0,0.0,140,Identifiant unique de la commune (format C-001 à C-140),"Identifiant (traçabilité, hors analyse)"
+nom_commune,object,Identifiant,0,0.0,140,Nom de la commune,"Identifiant (traçabilité, hors analyse)"
+arrondissement,object,Identifiant,0,0.0,42,Arrondissement de rattachement,"Identifiant (traçabilité, hors analyse)"
+strate,object,Qualitative,0,0.0,5,Strate WBG à 6 catégories (zone_wbg × urbain_rural),Active AFCM
+brh_maison_de_transfert,int64,Quantitative,0,0.0,-,Nb de points Maison de Transfert (BRH 2017),Active ACP
+brh_agent_non_bancaire,int64,Quantitative,0,0.0,-,"Nb d'agents non bancaires (MonCash/LajanCash, BRH 2017)",Active ACP
+brh_banque,int64,Quantitative,0,0.0,-,Nb d'agences bancaires (BRH 2017),Active ACP
+brh_atm,int64,Quantitative,0,0.0,-,Nb de guichets automatiques (BRH 2017),Active ACP
+brh_microfinance,int64,Quantitative,0,0.0,-,Nb de points de microfinance (BRH 2017),Active ACP
+brh_caisse_populaire,int64,Quantitative,0,0.0,-,Nb de caisses populaires (BRH 2017),Active ACP
+population_totale,int64,Quantitative,0,0.0,-,Population totale (IHSI 2024),Active ACP
+superficie_km2,float64,Quantitative,0,0.0,-,Superficie de la commune (km²),Active ACP
+superficie_urbaine_km2,float64,Quantitative,0,0.0,-,Superficie de la zone urbaine de la commune (km²),Active ACP
+taux_compte_formel,float64,Quantitative,0,0.0,-,% population avec compte bancaire formel (proxy WBG 2017),Active ACP
+taux_compte_mobile,float64,Quantitative,0,0.0,-,% population avec compte d'argent électronique (proxy WBG 2017),Active ACP
+taux_utilisation_OTA,float64,Quantitative,0,0.0,-,% utilisant les opérateurs de transfert d'argent (proxy WBG 2017),Active ACP
+score_connaissance_fka,float64,Quantitative,0,0.0,-,"Score de connaissance financière, échelle 0-8 (proxy WBG 2017)",Active ACP
+taux_connaissance_banque,float64,Quantitative,0,0.0,-,% connaissant les services bancaires (proxy WBG 2017),Active ACP
+taux_satisfaction_banque,float64,Quantitative,0,0.0,-,% satisfaits des services bancaires (proxy WBG 2017),Active ACP
+taux_epargne_formelle,float64,Quantitative,0,0.0,-,% épargnant en institution formelle (proxy WBG 2017),Active ACP
+taux_telephone_mobile,float64,Quantitative,0,0.0,-,% possédant un téléphone mobile (proxy WBG 2017),Active ACP
+taux_internet,float64,Quantitative,0,0.0,-,% utilisant internet (proxy WBG 2017),Active ACP
+acces_routier,object,Qualitative,0,0.0,3,Accessibilité routière des points BRH (Proche/Moyen/Éloigné),Active AFCM
+classe_urbanisation,object,Qualitative,0,0.0,3,Classe d'urbanisation à 3 niveaux (Rurale/Mi-urbaine/Urbaine),Active AFCM
+classe_densite_demographique,object,Qualitative,0,0.0,3,Densité démographique en tertiles,Active AFCM
+classe_densite_bancaire,object,Qualitative,0,0.0,3,Densité de services bancaires en tertiles,Active AFCM
+classe_diversite_services,object,Qualitative,0,0.0,3,Diversité des types de services financiers présents,Active AFCM
+indice_privation_spatiale,float64,Quantitative,0,0.0,-,"Indice composite de privation spatiale, 0 (faible) à 1 (forte)",Active ACP
+classe_privation_spatiale,object,Qualitative,0,0.0,3,Version qualitative (tertiles) de l'indice de privation spatiale,Active AFCM
+departement,object,Qualitative,0,0.0,10,Département administratif (10 modalités),Active AFCM
+classe_taille_population,object,Qualitative,0,0.0,3,Taille de la population en tertiles,Active AFCM
+profil_services_financiers,object,Qualitative,0,0.0,5,Typologie hiérarchique de l'offre financière formelle (5 modalités),Active AFCM
+classe_taille_menage,object,Qualitative,0,0.0,3,Taille moyenne des ménages en tertiles,Active AFCM
+part_urbaine,float64,Quantitative,0,0.0,-,Proportion de la population résidant en zone urbaine,Active ACP
+densite_hab_km2,float64,Quantitative,0,0.0,-,Densité de population (hab./km²),Active ACP
+densite_bancaire_10k,float64,Quantitative,0,0.0,-,Effectif BRH pour 10 000 habitants,Active ACP
+nb_types_services,int64,Quantitative,0,0.0,-,Nombre de types de services financiers présents (sur 6),Active ACP
+taille_moyenne_menage,float64,Quantitative,0,0.0,-,Population totale / nombre de ménages,Active ACP
+adm2_pcode,object,Identifiant,0,0.0,140,"Code administratif communal (OCHA COD-AB), ajouté en Section 2 pour la jointure geojson","Identifiant (traçabilité, hors analyse)"
