@@ -1,0 +1,3 @@
+﻿variable,type,echelle,interpretation,methode
+cluster_kmeans,Typologie catégorielle (profilage descriptif),0 à 2,Groupe de communes aux profils territoriaux similaires selon les axes ACP retenus.,"K-means (K=3, random_state=42) sur 6 axe(s) ACP (Dim1 à Dim6)."
+cluster_cha,Typologie catégorielle (contrôle de robustesse),0 à 2,"Partition alternative issue de la CHA (Ward), comparée au K-means via l'Adjusted Rand Index.","CHA (liaison de Ward), coupe à K=3 clusters."

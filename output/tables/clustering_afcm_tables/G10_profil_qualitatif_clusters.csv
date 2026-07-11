@@ -1,0 +1,133 @@
+﻿variable,modalite,cluster_kmeans,pct_dans_cluster
+strate,Rurale-Connectée (RN),0,8.1
+strate,Rurale-Connectée (RN),1,5.9
+strate,Rurale-Connectée (RN),2,0.0
+strate,Rurale-Non-connectée (H-Ile),0,91.9
+strate,Rurale-Non-connectée (H-Ile),1,0.0
+strate,Rurale-Non-connectée (H-Ile),2,0.0
+strate,Urbaine-Connectée (RN),0,0.0
+strate,Urbaine-Connectée (RN),1,41.2
+strate,Urbaine-Connectée (RN),2,22.4
+strate,Urbaine-Non-connectée (H-Ile),0,0.0
+strate,Urbaine-Non-connectée (H-Ile),1,11.8
+strate,Urbaine-Non-connectée (H-Ile),2,77.6
+strate,Urbaine-PAP,0,0.0
+strate,Urbaine-PAP,1,41.2
+strate,Urbaine-PAP,2,0.0
+acces_routier,Moyen,0,6.8
+acces_routier,Moyen,1,11.8
+acces_routier,Moyen,2,6.1
+acces_routier,Proche,0,70.3
+acces_routier,Proche,1,88.2
+acces_routier,Proche,2,65.3
+acces_routier,Éloigné,0,23.0
+acces_routier,Éloigné,1,0.0
+acces_routier,Éloigné,2,28.6
+classe_urbanisation,Mi-urbaine,0,51.4
+classe_urbanisation,Mi-urbaine,1,17.6
+classe_urbanisation,Mi-urbaine,2,46.9
+classe_urbanisation,Rurale,0,48.6
+classe_urbanisation,Rurale,1,0.0
+classe_urbanisation,Rurale,2,0.0
+classe_urbanisation,Urbaine,0,0.0
+classe_urbanisation,Urbaine,1,82.4
+classe_urbanisation,Urbaine,2,53.1
+classe_densite_demographique,Faible,0,39.2
+classe_densite_demographique,Faible,1,5.9
+classe_densite_demographique,Faible,2,34.7
+classe_densite_demographique,Moyenne,0,33.8
+classe_densite_demographique,Moyenne,1,11.8
+classe_densite_demographique,Moyenne,2,38.8
+classe_densite_demographique,Élevée,0,27.0
+classe_densite_demographique,Élevée,1,82.4
+classe_densite_demographique,Élevée,2,26.5
+classe_densite_bancaire,Faible,0,45.9
+classe_densite_bancaire,Faible,1,5.9
+classe_densite_bancaire,Faible,2,24.5
+classe_densite_bancaire,Moyenne,0,32.4
+classe_densite_bancaire,Moyenne,1,0.0
+classe_densite_bancaire,Moyenne,2,44.9
+classe_densite_bancaire,Élevée,0,21.6
+classe_densite_bancaire,Élevée,1,94.1
+classe_densite_bancaire,Élevée,2,30.6
+classe_diversite_services,Faible,0,6.8
+classe_diversite_services,Faible,1,0.0
+classe_diversite_services,Faible,2,2.0
+classe_diversite_services,Moyenne,0,67.6
+classe_diversite_services,Moyenne,1,0.0
+classe_diversite_services,Moyenne,2,67.3
+classe_diversite_services,Élevée,0,25.7
+classe_diversite_services,Élevée,1,100.0
+classe_diversite_services,Élevée,2,30.6
+classe_privation_spatiale,Faible,0,31.1
+classe_privation_spatiale,Faible,1,35.3
+classe_privation_spatiale,Faible,2,36.7
+classe_privation_spatiale,Moyenne,0,31.1
+classe_privation_spatiale,Moyenne,1,35.3
+classe_privation_spatiale,Moyenne,2,34.7
+classe_privation_spatiale,Élevée,0,37.8
+classe_privation_spatiale,Élevée,1,29.4
+classe_privation_spatiale,Élevée,2,28.6
+departement,Artibonite,0,10.8
+departement,Artibonite,1,11.8
+departement,Artibonite,2,10.2
+departement,Centre,0,14.9
+departement,Centre,1,5.9
+departement,Centre,2,0.0
+departement,Grand'Anse,0,10.8
+departement,Grand'Anse,1,5.9
+departement,Grand'Anse,2,6.1
+departement,Nippes,0,10.8
+departement,Nippes,1,0.0
+departement,Nippes,2,6.1
+departement,Nord,0,6.8
+departement,Nord,1,5.9
+departement,Nord,2,26.5
+departement,Nord-Est,0,6.8
+departement,Nord-Est,1,0.0
+departement,Nord-Est,2,16.3
+departement,Nord-Ouest,0,10.8
+departement,Nord-Ouest,1,5.9
+departement,Nord-Ouest,2,2.0
+departement,Ouest,0,1.4
+departement,Ouest,1,52.9
+departement,Ouest,2,20.4
+departement,Sud,0,16.2
+departement,Sud,1,5.9
+departement,Sud,2,10.2
+departement,Sud-Est,0,10.8
+departement,Sud-Est,1,5.9
+departement,Sud-Est,2,2.0
+classe_taille_population,Grande,0,25.7
+classe_taille_population,Grande,1,100.0
+classe_taille_population,Grande,2,22.4
+classe_taille_population,Moyenne,0,36.5
+classe_taille_population,Moyenne,1,0.0
+classe_taille_population,Moyenne,2,38.8
+classe_taille_population,Petite,0,37.8
+classe_taille_population,Petite,1,0.0
+classe_taille_population,Petite,2,38.8
+profil_services_financiers,Aucune institution formelle,0,47.3
+profil_services_financiers,Aucune institution formelle,1,0.0
+profil_services_financiers,Aucune institution formelle,2,22.4
+profil_services_financiers,Bancarisé,0,2.7
+profil_services_financiers,Bancarisé,1,0.0
+profil_services_financiers,Bancarisé,2,6.1
+profil_services_financiers,Caisse populaire uniquement,0,18.9
+profil_services_financiers,Caisse populaire uniquement,1,0.0
+profil_services_financiers,Caisse populaire uniquement,2,38.8
+profil_services_financiers,Microfinance sans banque,0,29.7
+profil_services_financiers,Microfinance sans banque,1,0.0
+profil_services_financiers,Microfinance sans banque,2,24.5
+profil_services_financiers,Pôle financier complet,0,1.4
+profil_services_financiers,Pôle financier complet,1,100.0
+profil_services_financiers,Pôle financier complet,2,8.2
+classe_taille_menage,Grande,0,33.8
+classe_taille_menage,Grande,1,23.5
+classe_taille_menage,Grande,2,36.7
+classe_taille_menage,Moyenne,0,32.4
+classe_taille_menage,Moyenne,1,58.8
+classe_taille_menage,Moyenne,2,24.5
+classe_taille_menage,Petite,0,33.8
+classe_taille_menage,Petite,1,17.6
+classe_taille_menage,Petite,2,38.8

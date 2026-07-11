@@ -1,0 +1,141 @@
+﻿id_commune,nom_commune,arrondissement,adm2_pcode,cluster_kmeans,cluster_cha
+C-001,Port-au-Prince,Port-au-Prince,HT0111,1,0
+C-002,Delmas,Port-au-Prince,HT0112,1,0
+C-003,Cité Soleil,Port-au-Prince,HT0117,1,0
+C-004,Tabarre,Port-au-Prince,HT0118,1,0
+C-005,Carrefour,Port-au-Prince,HT0113,1,0
+C-006,Pétion-Ville,Port-au-Prince,HT0114,1,0
+C-007,Kenscoff,Port-au-Prince,HT0115,2,1
+C-008,Gressier,Port-au-Prince,HT0116,2,1
+C-009,Léogâne,Léogâne,HT0121,1,0
+C-010,Petit-Goâve,Léogâne,HT0122,1,0
+C-011,Grand-Goâve,Léogâne,HT0123,2,1
+C-012,Croix-des-Bouquets,Croix-des-Bouquets,HT0131,1,0
+C-013,Thomazeau,Croix-des-Bouquets,HT0132,2,1
+C-014,Ganthier,Croix-des-Bouquets,HT0133,2,1
+C-015,Cornillon,Croix-des-Bouquets,HT0134,0,2
+C-016,Fonds-Verrettes,Croix-des-Bouquets,HT0135,2,1
+C-017,Arcahaie,Arcahaie,HT0141,2,1
+C-018,Cabaret,Arcahaie,HT0142,2,0
+C-019,Anse-à-Galets,La Gonâve,HT0151,2,1
+C-020,Pointe-à-Raquette,La Gonâve,HT0152,2,1
+C-021,Jacmel,Jacmel,HT0211,1,2
+C-022,Marigot,Jacmel,HT0212,0,2
+C-023,Cayes-Jacmel,Jacmel,HT0213,0,2
+C-024,La Vallée de Jacmel,Jacmel,HT0214,0,2
+C-025,Bainet,Bainet,HT0221,0,2
+C-026,Côtes-de-Fer,Bainet,HT0222,0,2
+C-027,Belle-Anse,Belle-Anse,HT0231,0,2
+C-028,Grand-Gosier,Belle-Anse,HT0232,0,2
+C-029,Thiotte,Belle-Anse,HT0233,0,2
+C-030,Anse-à-Pitre,Belle-Anse,HT0234,2,1
+C-031,Cap-Haïtien,Cap-Haïtien,HT0311,1,0
+C-032,Quartier-Morin,Cap-Haïtien,HT0312,0,2
+C-033,Limonade,Cap-Haïtien,HT0313,2,1
+C-034,Acul-du-Nord,Acul-du-Nord,HT0321,2,1
+C-035,Plaine-du-Nord,Acul-du-Nord,HT0322,2,1
+C-036,Milot,Acul-du-Nord,HT0323,2,1
+C-037,Grande-Rivière-du-Nord,Grande-Rivière-du-Nord,HT0331,2,1
+C-038,Bahon,Grande-Rivière-du-Nord,HT0332,0,2
+C-039,Saint-Raphaël,Saint-Raphaël,HT0341,2,2
+C-040,Dondon,Saint-Raphaël,HT0342,2,1
+C-041,Ranquitte,Saint-Raphaël,HT0343,0,2
+C-042,Pignon,Saint-Raphaël,HT0344,2,1
+C-043,La Victoire,Saint-Raphaël,HT0345,2,1
+C-044,Borgne,Borgne,HT0351,0,2
+C-045,Port-Margot,Borgne,HT0352,2,1
+C-046,Limbé,Limbé,HT0361,2,1
+C-047,Bas-Limbé,Limbé,HT0362,2,1
+C-048,Plaisance,Plaisance,HT0371,2,1
+C-049,Pilate,Plaisance,HT0372,0,2
+C-050,Fort-Liberté,Fort-Liberté,HT0411,2,1
+C-051,Ferrier,Fort-Liberté,HT0412,2,1
+C-052,Perches,Fort-Liberté,HT0413,2,1
+C-053,Ouanaminthe,Ouanaminthe,HT0421,2,0
+C-054,Capotille,Ouanaminthe,HT0422,0,2
+C-055,Mont-Organisé,Ouanaminthe,HT0423,0,2
+C-056,Trou-du-Nord,Trou-du-Nord,HT0431,2,1
+C-057,Sainte-Suzanne,Trou-du-Nord,HT0432,0,2
+C-058,Terrier-Rouge,Trou-du-Nord,HT0433,2,1
+C-059,Caracol,Trou-du-Nord,HT0434,2,1
+C-060,Vallières,Vallières,HT0441,0,2
+C-061,Carice,Vallières,HT0442,2,1
+C-062,Mombin-Crochu,Vallières,HT0443,0,2
+C-063,Gonaïves,Gonaïves,HT0511,1,0
+C-064,Ennery,Gonaïves,HT0512,0,2
+C-065,Estère,Gonaïves,HT0513,2,1
+C-066,Gros-Morne,Gros-Morne,HT0521,0,2
+C-067,Terre-Neuve,Gros-Morne,HT0522,0,2
+C-068,Anse-Rouge,Gros-Morne,HT0523,2,1
+C-069,Saint-Marc,Saint-Marc,HT0531,1,0
+C-070,Verrettes,Saint-Marc,HT0532,2,1
+C-071,La Chapelle,Saint-Marc,HT0533,0,2
+C-072,Dessalines,Dessalines,HT0541,0,2
+C-073,Petite-Rivière-de-l'Artibonite,Dessalines,HT0542,2,1
+C-074,Grande-Saline,Dessalines,HT0543,0,2
+C-075,Desdunes,Dessalines,HT0544,2,1
+C-076,Saint-Michel-de-l'Attalaye,Marmelade,HT0551,0,2
+C-077,Marmelade,Marmelade,HT0552,0,2
+C-078,Hinche,Hinche,HT0611,1,0
+C-079,Maïssade,Hinche,HT0612,0,2
+C-080,Thomonde,Hinche,HT0613,0,2
+C-081,Cerca-Carvajal,Hinche,HT0614,0,2
+C-082,Mirebalais,Mirebalais,HT0621,0,2
+C-083,Saut-d'Eau,Mirebalais,HT0622,0,2
+C-084,Boucan-Carré,Mirebalais,HT0623,0,2
+C-085,Lascahobas,Lascahobas,HT0631,0,2
+C-086,Belladère,Lascahobas,HT0632,0,2
+C-087,Savanette,Lascahobas,HT0633,0,2
+C-088,Cerca-la-Source,Cerca-la-Source,HT0641,0,2
+C-089,Thomassique,Cerca-la-Source,HT0642,0,2
+C-090,Les Cayes,Les Cayes,HT0711,1,0
+C-091,Torbeck,Les Cayes,HT0712,0,2
+C-092,Chantal,Les Cayes,HT0713,0,2
+C-093,Camp-Perrin,Les Cayes,HT0714,0,2
+C-094,Maniche,Les Cayes,HT0715,0,2
+C-095,Île-à-Vache,Les Cayes,HT0716,0,2
+C-096,Port-Salut,Port-Salut,HT0721,0,2
+C-097,Saint-Jean-du-Sud,Port-Salut,HT0722,0,2
+C-098,Arniquet,Port-Salut,HT0723,0,2
+C-099,Aquin,Aquin,HT0731,0,2
+C-100,Saint-Louis-du-Sud,Aquin,HT0732,0,2
+C-101,Cavaillon,Aquin,HT0733,0,2
+C-102,Côteaux,Côteaux,HT0741,2,1
+C-103,Port-à-Piment,Côteaux,HT0742,2,1
+C-104,Roche-à-Bateau,Côteaux,HT0743,0,2
+C-105,Chardonnières,Chardonnières,HT0751,2,1
+C-106,Les Anglais,Chardonnières,HT0752,2,1
+C-107,Tiburon,Chardonnières,HT0753,2,1
+C-108,Jérémie,Jérémie,HT0811,1,0
+C-109,Abricots,Jérémie,HT0812,0,2
+C-110,Bonbon,Jérémie,HT0813,0,2
+C-111,Moron,Jérémie,HT0814,0,2
+C-112,Chambellan,Jérémie,HT0815,0,2
+C-113,Anse-d'Hainault,Anse-d'Hainault,HT0821,2,1
+C-114,Dame-Marie,Anse-d'Hainault,HT0822,2,1
+C-115,Les Irois,Anse-d'Hainault,HT0823,2,1
+C-116,Corail,Corail,HT0831,0,2
+C-117,Roseaux,Corail,HT0832,0,2
+C-118,Beaumont,Corail,HT0833,0,2
+C-119,Pestel,Corail,HT0834,0,2
+C-120,Port-de-Paix,Port-de-Paix,HT0911,1,0
+C-121,La Tortue,Port-de-Paix,HT0912,0,2
+C-122,Bassin-Bleu,Port-de-Paix,HT0913,0,2
+C-123,Chansolme,Port-de-Paix,HT0914,0,2
+C-124,Saint-Louis-du-Nord,Saint-Louis-du-Nord,HT0921,2,1
+C-125,Anse-à-Foleur,Saint-Louis-du-Nord,HT0922,0,2
+C-126,Môle-Saint-Nicolas,Môle-Saint-Nicolas,HT0931,0,2
+C-127,Baie-de-Henne,Môle-Saint-Nicolas,HT0932,0,2
+C-128,Bombardopolis,Môle-Saint-Nicolas,HT0933,0,2
+C-129,Jean-Rabel,Môle-Saint-Nicolas,HT0934,0,2
+C-130,Miragoâne,Miragoâne,HT1011,2,0
+C-131,Petite-Rivière-de-Nippes,Miragoâne,HT1012,0,2
+C-132,Fonds-des-Nègres,Miragoâne,HT1013,0,2
+C-133,Paillant,Miragoâne,HT1014,0,2
+C-134,Anse-à-Veau,Anse-à-Veau,HT1021,0,2
+C-135,Petit-Trou-de-Nippes,Anse-à-Veau,HT1022,2,1
+C-136,L'Asile,Anse-à-Veau,HT1023,0,2
+C-137,Arnaud,Anse-à-Veau,HT1024,0,2
+C-138,Plaisance-du-Sud,Anse-à-Veau,HT1025,0,2
+C-139,Baradères,Baradères,HT1031,0,2
+C-140,Grand-Boucan,Baradères,HT1032,2,1
