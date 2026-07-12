@@ -1,0 +1,4 @@
+﻿modele,R2_train,R2_test,RMSE_test,MAE_test,R2_CV_moyen,R2_CV_ecart_type,ecart_train_test
+Ridge,1.0,1.0,0.0001,0.0,1.0,0.0,0.0
+Lasso,1.0,1.0,0.0861,0.0665,1.0,0.0,0.0
+Random Forest,0.9934,0.9342,5.2838,3.7423,0.9497,0.0178,0.0592
