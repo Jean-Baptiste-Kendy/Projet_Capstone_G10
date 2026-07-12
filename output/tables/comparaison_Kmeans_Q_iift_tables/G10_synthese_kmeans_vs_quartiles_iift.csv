@@ -1,0 +1,8 @@
+﻿critere,kmeans,quartiles_iift
+Nombre de groupes,3,4
+Données utilisées,Clusters importés du notebook 2.3,IIFT importé du notebook 2.2
+Nouvel indice créé ?,Non,Non
+Silhouette (espace ACP existant),0.336,0.079
+ARI entre les deux partitions (mesure symétrique),0.255,"idem (mesure unique, cf. kmeans)"
+NMI entre les deux partitions (mesure symétrique),0.389,"idem (mesure unique, cf. kmeans)"
+Quartiles IIFT hétérogènes,3/4 quartiles contiennent plusieurs clusters,—
