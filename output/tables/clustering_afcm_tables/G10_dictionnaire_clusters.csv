@@ -1,3 +1,4 @@
 ﻿variable,type,echelle,interpretation,methode
 cluster_kmeans,Typologie catégorielle (profilage descriptif),0 à 2,Groupe de communes aux profils territoriaux similaires selon les axes ACP retenus.,"K-means (K=3, random_state=42) sur 6 axe(s) ACP (Dim1 à Dim6)."
 cluster_cha,Typologie catégorielle (contrôle de robustesse),0 à 2,"Partition alternative issue de la CHA (Ward), comparée au K-means via l'Adjusted Rand Index.","CHA (liaison de Ward), coupe à K=3 clusters."
+niveau_iift,Étiquette descriptive (lisibilité du rapport uniquement),Classe_IIFT_Très_faible à Classe_IIFT_Extrême (Section 8-TER),"Nom lisible attribué à chaque cluster K-means selon sa moyenne de Dim1 — ne remplace pas cluster_kmeans, n'intervient pas dans le clustering lui-même.","Classement des clusters par Dim1 moyen croissant, réparti sur une échelle à 10 niveaux."
