@@ -4,29 +4,6 @@ Cette archive contient le dashboard **complet et cumulatif** (Phases 1 à 4).
 Il n'existe pas de version séparée par phase — chaque phase a modifié ce même
 projet, qui est donc à jour dans son intégralité.
 
-## Correctifs post-audit (après relecture complète du projet)
-
-Quatre problèmes identifiés lors d'une relecture indépendante ont été corrigés :
-
-1. **Double chargement des données** — `load_all()` (démarrage) et `get_table()`
-   (pages) utilisaient deux caches séparés, donc chaque fichier était téléchargé
-   deux fois. Unifiés dans un seul cache (`_TABLE_CACHE`, cf. `data/loaders.py`).
-2. **Filtre "Niveau géographique" non fonctionnel** — le radio Pays/Département/
-   Commune ne déclenchait aucun callback. Il pilote maintenant réellement
-   l'affichage et le filtrage, **avec un niveau Arrondissement ajouté** entre
-   Département et Commune (cascade à 4 niveaux, cf. `pages/carte.py`).
-3. **`selection-store` non branché** — déplacé dans `app.py` (persistant entre
-   pages) et réellement alimenté par le dropdown "Commune" ou un clic direct sur
-   la carte ; la page Fiche commune se pré-remplit automatiquement.
-4. **Aucun CSS responsive** — 3 points de rupture ajoutés (1024px / 768px / 480px)
-   dans `assets/style.css`.
-
-Reformulation également apportée à l'insight Random Forest de la page d'accueil
-(le R²=1,00 de Ridge/Lasso y était présenté comme une performance, alors qu'il ne
-fait que confirmer que l'IIFT est une combinaison linéaire de ces variables — seul
-le R²=0,93 de Random Forest, qui ne voit pas cette formule, valide réellement la
-structure de l'indice).
-
 ## Contenu par phase (toutes incluses ici)
 
 - **Phase 1** — Fondations : `app.py`, navigation multi-pages, composants

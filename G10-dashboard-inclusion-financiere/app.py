@@ -50,11 +50,6 @@ server = app.server  # nécessaire pour le déploiement (gunicorn ciblera app:se
 app.layout = html.Div(
     children=[
         build_navbar(),
-        # Store partagé entre TOUTES les pages (contrairement à un Store placé
-        # dans un composant de page, qui serait détruit à chaque navigation) :
-        # sert à synchroniser la commune sélectionnée sur la Carte avec la
-        # Fiche commune (cf. components/filter_bar.py et pages/carte.py).
-        dcc.Store(id="selection-store", storage_type="session", data={"commune": None}),
         html.Main(dash.page_container),
         build_footer(),
     ]
