@@ -99,8 +99,6 @@ PATHS = {
 # matrice finale) <-> adm2_name (dans le geojson), avec les mêmes 4 corrections.
 ID_COMMUNE_COL = "id_commune"
 NOM_COMMUNE_COL = "nom_commune"        # présent dans G10_Matrice_Donnees_Finale.csv
-DEPARTEMENT_COL = "departement"
-ARRONDISSEMENT_COL = "arrondissement"  # présent dans G10_Matrice_Donnees_Finale.csv (source IHSI)
 GEOJSON_NAME_PROPERTY = "adm2_name"    # ✅ confirmé par inspection directe du geojson
 GEOJSON_PCODE_PROPERTY = "adm2_pcode"  # code administratif OCHA, alternative possible
 
