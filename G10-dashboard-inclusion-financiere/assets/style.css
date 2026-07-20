@@ -349,6 +349,89 @@ h1, h2, h3, h4 {
   margin-bottom: 8px;
 }
 
+/* ---------------- Grille de dashboard (façon Power BI / Tableau) ---------------- */
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-panel-full {
+  grid-column: 1 / -1;
+}
+
+.chart-panel-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chart-panel-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--petrole-900);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.chart-panel-caption {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.chart-panel-body {
+  padding: 8px 12px 12px;
+  flex: 1;
+  overflow: auto;
+  max-height: 360px;
+}
+
+.chart-panel-body table.fiche-table {
+  max-width: none;
+  font-size: 12px;
+}
+
+/* Page header compact (remplace H1 + long paragraphe) */
+.page-header-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.page-header-row h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+.page-header-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
 /* ---------------- Fiche commune : tableau d'indicateurs ---------------- */
 
 .fiche-table {
@@ -426,63 +509,4 @@ h1, h2, h3, h4 {
   font-size: 13px;
   padding: 40px;
   text-align: center;
-}
-
-/* ---------------- Responsive (correctif : aucune règle n'existait avant) ----------------
-   Trois points de rupture couvrent l'usage réel visé : présentation sur grand écran
-   (par défaut, inchangé), consultation sur ordinateur portable/tablette pendant la
-   correction, et un repli minimal mobile pour ne jamais casser la mise en page. */
-
-@media (max-width: 1024px) {
-  .kpi-row {
-    flex-wrap: wrap;
-  }
-  .kpi-card {
-    min-width: 45%;
-  }
-  .filter-bar {
-    flex-wrap: wrap;
-    row-gap: 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar-inner {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 8px;
-  }
-  .navbar-links {
-    flex-wrap: wrap;
-    gap: 4px 12px;
-  }
-  .kpi-card {
-    min-width: 100%;
-  }
-  .filter-bar {
-    flex-direction: column;
-  }
-  .filter-group {
-    width: 100%;
-  }
-  .page-container {
-    padding: 12px;
-  }
-  /* Les tableaux larges (fiche commune, dictionnaires) débordent proprement
-     plutôt que de casser la mise en page ou de forcer un zoom du navigateur */
-  .fiche-table {
-    display: block;
-    overflow-x: auto;
-    white-space: nowrap;
-  }
-}
-
-@media (max-width: 480px) {
-  .footer-inner {
-    flex-direction: column;
-    gap: 12px;
-  }
-  h1 {
-    font-size: 22px;
-  }
 }
