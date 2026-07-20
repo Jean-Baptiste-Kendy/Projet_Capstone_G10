@@ -1,16 +1,18 @@
-"""Page 4 — Clustering & AFCM : robustesse méthodologique de la typologie K=3."""
+"""Page 4 — Clustering & AFCM : layout en grille, pas un rapport linéaire."""
 
 import dash
-from dash import html, dcc
+from dash import html
 import plotly.express as px
 import plotly.graph_objects as go
-import pandas as pd
 
 from components.kpi_card import build_kpi_row
+from components.chart_panel import build_chart_panel, build_grid
 from data.loaders import get_table, DataLoadError
 from data.config import COLORS, CLUSTER_COLORS, CLUSTER_LABELS
 
 dash.register_page(__name__, path="/clustering-afcm", name="Clustering & AFCM", order=4)
+
+PANEL_HEIGHT = 280
 
 
 def layout():
@@ -32,53 +34,33 @@ def layout():
     silhouette_k3 = choix_k.loc[choix_k["k"] == 3, "silhouette"].iloc[0]
     tailles = clusters["cluster_kmeans"].value_counts().sort_index()
 
-    # --- KPIs ---
     kpis = build_kpi_row([
         {"label": "K retenu", "value": "3", "accent": True},
         {"label": "Silhouette (K=3)", "value": f"{silhouette_k3:.3f}"},
-        {
-            "label": "Répartition des clusters",
-            "value": " / ".join(str(v) for v in tailles.values),
-            "sublabel": "communes par cluster (0, 1, 2)",
-        },
-        {
-            "label": "Variance Axe 1 AFCM (corrigée Benzécri)",
-            "value": f"{afcm_vp.iloc[0]['pct_of_variance_benzecri']:.1f}%",
-        },
+        {"label": "Répartition clusters", "value": " / ".join(str(v) for v in tailles.values), "sublabel": "communes (0,1,2)"},
+        {"label": "Variance Axe1 AFCM (Benzécri)", "value": f"{afcm_vp.iloc[0]['pct_of_variance_benzecri']:.1f}%"},
     ])
 
-    # --- Courbe silhouette / inertie vs K ---
+    # --- Silhouette vs K ---
     fig_k = go.Figure()
-    fig_k.add_scatter(
-        x=choix_k["k"], y=choix_k["silhouette"], mode="lines+markers",
-        name="Silhouette", line=dict(color=COLORS["petrole_700"], width=2),
-    )
-    fig_k.add_scatter(
-        x=choix_k["k"], y=choix_k["silhouette"].where(choix_k["k"] == 3),
-        mode="markers", marker=dict(size=14, color=COLORS["terracotta_500"]),
-        name="K retenu = 3", showlegend=True,
-    )
+    fig_k.add_scatter(x=choix_k["k"], y=choix_k["silhouette"], mode="lines+markers", name="Silhouette",
+                       line=dict(color=COLORS["petrole_700"], width=2))
+    fig_k.add_scatter(x=choix_k["k"], y=choix_k["silhouette"].where(choix_k["k"] == 3), mode="markers",
+                       marker=dict(size=13, color=COLORS["terracotta_500"]), name="K=3")
     fig_k.update_layout(
-        xaxis_title="Nombre de clusters (K)", yaxis_title="Score de silhouette",
-        margin=dict(l=10, r=10, t=10, b=10), height=340,
-        font_family="Inter, sans-serif", paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
-        legend=dict(orientation="h", yanchor="bottom", y=1.02),
+        xaxis_title="K", yaxis_title="Silhouette", margin=dict(l=10, r=10, t=10, b=10), height=PANEL_HEIGHT,
+        font_family="Inter, sans-serif", font_size=10, paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
+        legend=dict(orientation="h", yanchor="bottom", y=1.02, font=dict(size=9)),
     )
 
-    # --- AFCM valeurs propres (Benzécri) ---
-    fig_afcm = go.Figure(
-        go.Bar(
-            x=afcm_vp["axe"], y=afcm_vp["pct_of_variance_benzecri"],
-            marker_color=COLORS["petrole_700"],
-        )
-    )
+    # --- AFCM valeurs propres ---
+    fig_afcm = go.Figure(go.Bar(x=afcm_vp["axe"], y=afcm_vp["pct_of_variance_benzecri"], marker_color=COLORS["petrole_700"]))
     fig_afcm.update_layout(
-        yaxis_title="Variance expliquée corrigée Benzécri (%)",
-        margin=dict(l=10, r=10, t=10, b=10), height=340,
-        font_family="Inter, sans-serif", paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
+        yaxis_title="Variance corrigée (%)", margin=dict(l=10, r=10, t=10, b=10), height=PANEL_HEIGHT,
+        font_family="Inter, sans-serif", font_size=10, paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
     )
 
-    # --- Profil quantitatif des clusters (Dim1-Dim6) ---
+    # --- Profil quantitatif ---
     dims = [c for c in profil_quanti.columns if c.startswith("Dim")]
     profil_long = profil_quanti.melt(id_vars="cluster_kmeans", value_vars=dims, var_name="axe", value_name="valeur")
     profil_long["cluster_label"] = profil_long["cluster_kmeans"].astype(str).map(CLUSTER_LABELS)
@@ -88,67 +70,43 @@ def layout():
         category_orders={"cluster_label": list(CLUSTER_LABELS.values())},
     )
     fig_profil.update_layout(
-        margin=dict(l=10, r=10, t=10, b=10), height=360,
-        font_family="Inter, sans-serif", paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
-        legend=dict(title="Cluster"),
+        margin=dict(l=10, r=10, t=10, b=10), height=PANEL_HEIGHT,
+        font_family="Inter, sans-serif", font_size=10, paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
+        legend=dict(title="", font=dict(size=8), orientation="h", yanchor="bottom", y=1.02),
     )
 
-    # --- Top modalités qualitatives par cluster ---
-    top_modalites_rows = []
+    # --- Top modalités qualitatives ---
+    rows = []
     for cl in sorted(profil_quali["cluster_kmeans"].unique()):
         sub = profil_quali[profil_quali["cluster_kmeans"] == cl].nlargest(3, "pct_dans_cluster")
         for _, row in sub.iterrows():
-            top_modalites_rows.append(
-                html.Tr([
-                    html.Td(CLUSTER_LABELS.get(str(cl), f"Cluster {cl}")),
-                    html.Td(row["variable"]),
-                    html.Td(row["modalite"]),
-                    html.Td(f"{row['pct_dans_cluster']:.1f}%"),
-                ])
-            )
+            rows.append(html.Tr([
+                html.Td(CLUSTER_LABELS.get(str(cl), f"C{cl}").split("—")[0].strip()),
+                html.Td(row["variable"]), html.Td(row["modalite"]), html.Td(f"{row['pct_dans_cluster']:.0f}%"),
+            ]))
     table_quali = html.Table(
         className="fiche-table",
-        children=[
-            html.Thead(html.Tr([html.Th("Cluster"), html.Th("Variable"), html.Th("Modalité"), html.Th("% dans le cluster")])),
-            html.Tbody(top_modalites_rows),
-        ],
+        children=[html.Thead(html.Tr([html.Th("Cluster"), html.Th("Variable"), html.Th("Modalité"), html.Th("%")])), html.Tbody(rows)],
     )
 
     # --- Communes représentatives ---
     repr_rows = [
         html.Tr([
-            html.Td(CLUSTER_LABELS.get(str(row["cluster"]), f"Cluster {row['cluster']}")),
-            html.Td(row["nom_commune"]),
-            html.Td(f"{row['distance']:.2f}"),
+            html.Td(CLUSTER_LABELS.get(str(row["cluster"]), f"C{row['cluster']}").split("—")[0].strip()),
+            html.Td(row["nom_commune"]), html.Td(f"{row['distance']:.2f}"),
         ])
         for _, row in representatives.sort_values(["cluster", "distance"]).iterrows()
     ]
     table_repr = html.Table(
         className="fiche-table",
-        children=[
-            html.Thead(html.Tr([html.Th("Cluster"), html.Th("Commune représentative"), html.Th("Distance au centroïde")])),
-            html.Tbody(repr_rows),
-        ],
+        children=[html.Thead(html.Tr([html.Th("Cluster"), html.Th("Commune"), html.Th("Distance")])), html.Tbody(repr_rows)],
     )
 
-    # --- Tableau croisé K-Means x quartiles IIFT ---
-    tc = tableau_croise.copy()
-    tc["cluster_kmeans"] = tc["cluster_kmeans"].astype(str).map(CLUSTER_LABELS)
-    table_croise_html = html.Table(
-        className="fiche-table",
-        children=[
-            html.Thead(html.Tr([html.Th("Cluster K-Means")] + [html.Th(c) for c in tc.columns[1:]])),
-            html.Tbody([
-                html.Tr([html.Td(row["cluster_kmeans"])] + [html.Td(str(row[c])) for c in tc.columns[1:]])
-                for _, row in tc.iterrows()
-            ]),
-        ],
-    )
-
+    # --- Synthèse K-Means vs quartiles ---
     synthese_html = html.Table(
         className="fiche-table",
         children=[
-            html.Thead(html.Tr([html.Th("Critère"), html.Th("K-Means"), html.Th("Quartiles IIFT")])),
+            html.Thead(html.Tr([html.Th("Critère"), html.Th("K-Means"), html.Th("Quartiles")])),
             html.Tbody([
                 html.Tr([html.Td(row["critere"]), html.Td(str(row["kmeans"])), html.Td(str(row["quartiles_iift"]))])
                 for _, row in synthese.iterrows()
@@ -156,40 +114,38 @@ def layout():
         ],
     )
 
+    tc = tableau_croise.copy()
+    tc["cluster_kmeans"] = tc["cluster_kmeans"].astype(str).map(lambda x: CLUSTER_LABELS.get(x, x).split("—")[0].strip())
+    table_croise_html = html.Table(
+        className="fiche-table",
+        children=[
+            html.Thead(html.Tr([html.Th("Cluster")] + [html.Th(c) for c in tc.columns[1:]])),
+            html.Tbody([
+                html.Tr([html.Td(row["cluster_kmeans"])] + [html.Td(str(row[c])) for c in tc.columns[1:]])
+                for _, row in tc.iterrows()
+            ]),
+        ],
+    )
+
     return html.Div(
         className="page-container",
         children=[
-            html.H1("Clustering & AFCM"),
-            html.P(
-                "Validation de la typologie K-Means (K=3) et profilage qualitatif/quantitatif "
-                "des clusters via l'AFCM officielle (correction Benzécri).",
-                style={"color": "var(--text-secondary)"},
+            html.Div(
+                className="page-header-row",
+                children=[
+                    html.H1("Clustering & AFCM"),
+                    html.Span("Validation K=3, profilage des clusters, comparaison à un modèle de référence", className="page-header-sub"),
+                ],
             ),
             kpis,
-
-            html.H3("Choix de K : score de silhouette"),
-            dcc.Graph(figure=fig_k, config={"displayModeBar": False}),
-
-            html.H3("AFCM — variance expliquée par axe (correction Benzécri)", style={"marginTop": "24px"}),
-            dcc.Graph(figure=fig_afcm, config={"displayModeBar": False}),
-
-            html.H3("Profil quantitatif des clusters (axes ACP retenus)", style={"marginTop": "24px"}),
-            dcc.Graph(figure=fig_profil, config={"displayModeBar": False}),
-
-            html.H3("Profil qualitatif — 3 modalités dominantes par cluster", style={"marginTop": "24px"}),
-            table_quali,
-
-            html.H3("Communes représentatives (les plus proches du centroïde)", style={"marginTop": "24px"}),
-            table_repr,
-
-            html.H3("Validation : K-Means vs quartiles de l'IIFT", style={"marginTop": "24px"}),
-            html.P(
-                "Comparaison de la typologie non supervisée (K-Means) à un modèle de "
-                "référence simple (découpage en quartiles de l'IIFT).",
-                style={"color": "var(--text-secondary)", "fontSize": "13px"},
-            ),
-            synthese_html,
-            html.Div(style={"height": "12px"}),
-            table_croise_html,
+            build_grid([
+                build_chart_panel("Choix de K — silhouette", fig_k),
+                build_chart_panel("AFCM — variance par axe (Benzécri)", fig_afcm),
+                build_chart_panel("Profil quantitatif des clusters", fig_profil, span="full"),
+                build_chart_panel("Top 3 modalités qualitatives / cluster", table_quali),
+                build_chart_panel("Communes représentatives", table_repr),
+                build_chart_panel("Synthèse : K-Means vs quartiles IIFT", synthese_html),
+                build_chart_panel("Tableau croisé : K-Means × quartiles IIFT", table_croise_html),
+            ]),
         ],
     )

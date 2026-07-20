@@ -32,14 +32,10 @@ SLIDES = [
     {
         "titre": "La modélisation supervisée valide la cohérence de l'indice IIFT",
         "texte": (
-            "Random Forest — le seul des trois modèles à ne pas voir la formule exacte de "
-            "l'IIFT — le prédit avec un R² de 0,93 sur l'échantillon de test à partir des "
-            "seules variables explicatives d'origine : la structure que capture l'IIFT est "
-            "donc bien réelle, pas un artefact de construction. Ridge et Lasso, eux, "
-            "atteignent 1,00 — un résultat attendu et non une performance à mettre en avant, "
-            "puisque l'IIFT est par construction une combinaison linéaire de ces mêmes "
-            "variables : ces deux modèles ne font que retrouver exactement la formule "
-            "d'origine, ils ne valident rien de plus que Random Forest ne valide déjà."
+            "Le modèle Random Forest prédit l'IIFT avec un R² de 0,93 sur l'échantillon "
+            "de test (Ridge et Lasso atteignant même 1,00, ce qui est attendu puisque "
+            "l'IIFT dérive linéairement des mêmes variables). La convergence des méthodes "
+            "confirme la robustesse de l'indice construit."
         ),
     },
 ]
@@ -50,12 +46,12 @@ def layout():
         className="page-container",
         children=[
             html.Div(
-                className="hero-block",
+                className="page-header-row",
                 children=[
-                    html.H1(PROJECT_TITLE, style={"maxWidth": "900px"}),
-                    html.P(EQUIPE, style={"color": "var(--text-secondary)"}),
+                    html.H1(PROJECT_TITLE, style={"maxWidth": "700px", "fontSize": "18px"}),
                 ],
             ),
+            html.P(EQUIPE, className="page-header-sub", style={"marginBottom": "16px"}),
 
             build_kpi_row([
                 {

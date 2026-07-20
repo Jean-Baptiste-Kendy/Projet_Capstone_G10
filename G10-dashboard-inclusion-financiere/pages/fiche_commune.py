@@ -1,10 +1,10 @@
 """Page 6 — Fiche commune : recherche et détail individuel par commune."""
 
 import dash
-from dash import html, dcc, callback, Output, Input, no_update
+from dash import html, dcc, callback, Output, Input
 
 from components.kpi_card import build_kpi_row
-from data.loaders import get_table, DataLoadError
+from data.loaders import load_matrice_globale, DataLoadError
 from data.config import NOM_COMMUNE_COL, INDICATOR_LABELS
 
 dash.register_page(__name__, path="/fiche-commune", name="Fiche commune", order=6)
@@ -12,7 +12,7 @@ dash.register_page(__name__, path="/fiche-commune", name="Fiche commune", order=
 
 def layout():
     try:
-        df = get_table("matrice_globale")
+        df = load_matrice_globale()
     except DataLoadError as e:
         return html.Div(
             className="page-container",
@@ -32,10 +32,12 @@ def layout():
     return html.Div(
         className="page-container",
         children=[
-            html.H1("Fiche commune"),
-            html.P(
-                "Recherchez une commune pour consulter l'ensemble de ses indicateurs.",
-                style={"color": "var(--text-secondary)"},
+            html.Div(
+                className="page-header-row",
+                children=[
+                    html.H1("Fiche commune"),
+                    html.Span("Recherchez une commune pour ses indicateurs détaillés", className="page-header-sub"),
+                ],
             ),
             dcc.Dropdown(
                 id="fiche-commune-search",
@@ -46,23 +48,6 @@ def layout():
             html.Div(id="fiche-commune-detail"),
         ],
     )
-
-
-@callback(
-    Output("fiche-commune-search", "value"),
-    Input("selection-store", "data"),
-)
-def preremplir_depuis_selection(store_data):
-    """
-    Si une commune a été sélectionnée sur la page Carte (clic sur le
-    choroplèthe ou dropdown "Commune" de la barre de filtres), le Store
-    global `selection-store` (monté une fois pour toutes dans app.py, donc
-    persistant d'une page à l'autre) contient son nom. On l'utilise pour
-    pré-remplir cette page au lieu de forcer une nouvelle recherche manuelle.
-    """
-    if store_data and store_data.get("commune"):
-        return store_data["commune"]
-    return no_update
 
 
 @callback(
@@ -77,7 +62,7 @@ def update_fiche(commune):
         )
 
     try:
-        df = get_table("matrice_globale")
+        df = load_matrice_globale()
     except DataLoadError as e:
         return html.Div(className="error-banner", children=str(e))
 

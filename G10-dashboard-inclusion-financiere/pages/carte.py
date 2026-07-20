@@ -6,19 +6,13 @@ Utilise get_matrice_carte() qui enrichit la matrice globale avec :
 - IIFT + classe_IIFT (notebook 3 — G10_iift_communes.csv)
 - cluster_kmeans (notebook 4 — G10_clusters_kmeans.csv)
 
-Filtre géographique en cascade : Pays -> Département -> Arrondissement -> Commune.
-Le radio "Niveau géographique" pilote la VISIBILITÉ des 3 dropdowns dépendants ;
-chaque dropdown, une fois affiché, filtre réellement la carte (ce n'était pas le
-cas dans une version précédente, où ce radio ne déclenchait aucun callback).
-
-La commune sélectionnée (via le dropdown "Commune" OU un clic direct sur la
-carte) est écrite dans le Store global `selection-store` (monté dans app.py,
-persistant entre les pages) pour pré-remplir automatiquement la page
-Fiche commune — cf. pages/fiche_commune.py.
+Le filtre "Cluster IIFT" est maintenant actif (cluster_available=True) : les
+3 clusters ont une sémantique vérifiée sur les données réelles
+(cf. data/config.py — CLUSTER_LABELS).
 """
 
 import dash
-from dash import html, dcc, callback, Output, Input, State, ctx, no_update
+from dash import html, dcc, callback, Output, Input
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -32,23 +26,15 @@ from data.config import (
     CLUSTER_LABELS,
     DEFAULT_MAP_INDICATOR,
     GEOJSON_NAME_PROPERTY,
-    DEPARTEMENT_COL,
-    ARRONDISSEMENT_COL,
-    NOM_COMMUNE_COL,
 )
 
 dash.register_page(__name__, path="/carte", name="Carte interactive", order=2)
-
-_GROUP_VISIBLE = {"display": "flex", "flexDirection": "column", "gap": "4px"}
-_GROUP_HIDDEN = {"display": "none"}
 
 
 def layout():
     try:
         df = get_matrice_carte()
-        departements = sorted(df[DEPARTEMENT_COL].dropna().unique())
-        arrondissements = sorted(df[ARRONDISSEMENT_COL].dropna().unique())
-        communes = sorted(df[NOM_COMMUNE_COL].dropna().unique())
+        departements = sorted(df["departement"].dropna().unique())
     except DataLoadError as e:
         return html.Div(
             className="page-container",
@@ -66,19 +52,14 @@ def layout():
     return html.Div(
         className="page-container",
         children=[
-            html.H1("Carte interactive"),
-            html.P(
-                "Exploration géospatiale de l'indice IIFT, de la typologie K-Means "
-                "(3 clusters) et des indicateurs bruts d'inclusion financière — "
-                "140 communes. Cliquez sur une commune pour ouvrir sa fiche détaillée.",
-                style={"color": "var(--text-secondary)"},
+            html.Div(
+                className="page-header-row",
+                children=[
+                    html.H1("Carte interactive"),
+                    html.Span("IIFT, clusters K-Means et indicateurs bruts — 140 communes", className="page-header-sub"),
+                ],
             ),
-            build_filter_bar(
-                departements=departements,
-                arrondissements=arrondissements,
-                communes=communes,
-                cluster_available=True,
-            ),
+            build_filter_bar(departements=departements, cluster_available=True),
             html.Div(
                 style={"maxWidth": "360px", "marginBottom": "16px"},
                 children=[
@@ -96,145 +77,32 @@ def layout():
                 color=COLORS["terracotta_500"],
                 children=dcc.Graph(id="carte-choropleth", style={"height": "650px"}),
             ),
-            html.P(
-                id="carte-selection-info",
-                style={"color": "var(--text-secondary)", "fontSize": "13px", "marginTop": "8px"},
-            ),
         ],
     )
 
-
-# ---------------------------------------------------------------------------
-# Cascade Département -> Arrondissement -> Commune (+ visibilité du niveau géo)
-# ---------------------------------------------------------------------------
-
-@callback(
-    Output(f"{FILTER_BAR_ID_PREFIX}-departement-group", "style"),
-    Output(f"{FILTER_BAR_ID_PREFIX}-arrondissement-group", "style"),
-    Output(f"{FILTER_BAR_ID_PREFIX}-commune-group", "style"),
-    Output(f"{FILTER_BAR_ID_PREFIX}-departement", "value"),
-    Output(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "value", allow_duplicate=True),
-    Output(f"{FILTER_BAR_ID_PREFIX}-commune", "value", allow_duplicate=True),
-    Input(f"{FILTER_BAR_ID_PREFIX}-niveau-geo", "value"),
-    prevent_initial_call=True,
-)
-def toggle_niveau_geo(niveau):
-    """
-    Affiche uniquement les dropdowns pertinents pour le niveau choisi, et
-    réinitialise la sélection de ceux qui redeviennent masqués (évite qu'un
-    filtre "Arrondissement" reste appliqué en silence après être repassé en
-    vue "Département").
-    """
-    show_dept = niveau in ("departement", "arrondissement", "commune")
-    show_arr = niveau in ("arrondissement", "commune")
-    show_com = niveau == "commune"
-    return (
-        _GROUP_VISIBLE if show_dept else _GROUP_HIDDEN,
-        _GROUP_VISIBLE if show_arr else _GROUP_HIDDEN,
-        _GROUP_VISIBLE if show_com else _GROUP_HIDDEN,
-        no_update if show_dept else None,
-        no_update if show_arr else None,
-        no_update if show_com else None,
-    )
-
-
-@callback(
-    Output(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "options"),
-    Output(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "value", allow_duplicate=True),
-    Input(f"{FILTER_BAR_ID_PREFIX}-departement", "value"),
-    prevent_initial_call=True,
-)
-def update_arrondissement_options(departement):
-    """Restreint la liste des arrondissements au département choisi (ou liste
-    nationale complète si aucun département n'est sélectionné)."""
-    try:
-        df = get_matrice_carte()
-    except DataLoadError:
-        return [], None
-    subset = df if not departement else df[df[DEPARTEMENT_COL] == departement]
-    arrondissements = sorted(subset[ARRONDISSEMENT_COL].dropna().unique())
-    return [{"label": a, "value": a} for a in arrondissements], None
-
-
-@callback(
-    Output(f"{FILTER_BAR_ID_PREFIX}-commune", "options"),
-    Output(f"{FILTER_BAR_ID_PREFIX}-commune", "value", allow_duplicate=True),
-    Input(f"{FILTER_BAR_ID_PREFIX}-departement", "value"),
-    Input(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "value"),
-    prevent_initial_call=True,
-)
-def update_commune_options(departement, arrondissement):
-    """Restreint la liste des communes au département et/ou à l'arrondissement
-    déjà choisis (cascade à deux niveaux)."""
-    try:
-        df = get_matrice_carte()
-    except DataLoadError:
-        return [], None
-    subset = df
-    if departement:
-        subset = subset[subset[DEPARTEMENT_COL] == departement]
-    if arrondissement:
-        subset = subset[subset[ARRONDISSEMENT_COL] == arrondissement]
-    communes = sorted(subset[NOM_COMMUNE_COL].dropna().unique())
-    return [{"label": c, "value": c} for c in communes], None
-
-
-# ---------------------------------------------------------------------------
-# Carte principale
-# ---------------------------------------------------------------------------
 
 @callback(
     Output("carte-choropleth", "figure"),
     Output(f"{FILTER_BAR_ID_PREFIX}-total", "children"),
     Output(f"{FILTER_BAR_ID_PREFIX}-selectionne", "children"),
-    Output("selection-store", "data"),
-    Output("carte-selection-info", "children"),
     Input("carte-indicateur", "value"),
     Input(f"{FILTER_BAR_ID_PREFIX}-departement", "value"),
-    Input(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "value"),
-    Input(f"{FILTER_BAR_ID_PREFIX}-commune", "value"),
     Input(f"{FILTER_BAR_ID_PREFIX}-cluster", "value"),
-    Input("carte-choropleth", "clickData"),
-    State("selection-store", "data"),
 )
-def update_carte(indicateur, departement, arrondissement, commune, cluster, click_data, store_data):
+def update_carte(indicateur, departement, cluster):
     try:
         df = get_matrice_carte()
         geojson = load_geojson_communes()
     except DataLoadError:
-        return go.Figure(), "—", "—", store_data or {"commune": None}, ""
+        return go.Figure(), "—", "—"
 
     total = len(df)
     df_filtre = df
     if departement:
-        df_filtre = df_filtre[df_filtre[DEPARTEMENT_COL] == departement]
-    if arrondissement:
-        df_filtre = df_filtre[df_filtre[ARRONDISSEMENT_COL] == arrondissement]
-    if commune:
-        df_filtre = df_filtre[df_filtre[NOM_COMMUNE_COL] == commune]
+        df_filtre = df_filtre[df_filtre["departement"] == departement]
     if cluster and cluster != "all":
         df_filtre = df_filtre[df_filtre["cluster_kmeans"] == str(cluster)]
     n_selection = len(df_filtre)
-
-    # --- Sélection pour la fiche commune (dropdown "Commune" prioritaire, sinon
-    #     un clic direct sur la carte) — écrite dans le Store partagé global.
-    commune_cliquee = None
-    if ctx.triggered_id == "carte-choropleth" and click_data:
-        try:
-            adm2 = click_data["points"][0]["location"]
-            match = df[df["adm2_name"] == adm2]
-            if not match.empty:
-                commune_cliquee = match.iloc[0][NOM_COMMUNE_COL]
-        except (KeyError, IndexError, TypeError):
-            commune_cliquee = None
-
-    commune_selectionnee = commune or commune_cliquee
-    if commune_selectionnee:
-        store_out = {"commune": commune_selectionnee}
-        info = f"Commune sélectionnée : {commune_selectionnee} — ouvrez l'onglet « Fiche commune » pour le détail."
-    else:
-        store_out = store_data or {"commune": None}
-        info = ""
 
     is_categorical = indicateur in CATEGORICAL_INDICATORS
 
@@ -246,7 +114,7 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
         zoom=6.7,
         center={"lat": 18.97, "lon": -72.5},
         opacity=0.85,
-        hover_name=NOM_COMMUNE_COL,
+        hover_name="nom_commune",
     )
 
     if indicateur == "cluster_kmeans":
@@ -258,7 +126,7 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
             color="cluster_label",
             color_discrete_map=color_map,
             category_orders={"cluster_label": list(CLUSTER_LABELS.values())},
-            hover_data={DEPARTEMENT_COL: True, "IIFT": ":.1f", "adm2_name": False},
+            hover_data={"departement": True, "IIFT": ":.1f", "adm2_name": False},
             **common_kwargs,
         )
         legend_title = "Cluster K-Means"
@@ -276,7 +144,7 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
                 COLORS["petrole_500"],
                 COLORS["petrole_900"],
             ],
-            hover_data={DEPARTEMENT_COL: True, "IIFT": ":.1f", "adm2_name": False},
+            hover_data={"departement": True, "IIFT": ":.1f", "adm2_name": False},
             **common_kwargs,
         )
         legend_title = "Classe IIFT"
@@ -290,7 +158,7 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
                 COLORS["petrole_500"],
                 COLORS["petrole_900"],
             ],
-            hover_data={indicateur: ":.2f", DEPARTEMENT_COL: True, "adm2_name": False},
+            hover_data={indicateur: ":.2f", "departement": True, "adm2_name": False},
             labels={indicateur: label},
             **common_kwargs,
         )
@@ -305,4 +173,4 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
     if not is_categorical:
         fig.update_layout(coloraxis_colorbar=dict(title=legend_title, x=0.98))
 
-    return fig, str(total), str(n_selection), store_out, info
+    return fig, str(total), str(n_selection)
