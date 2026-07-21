@@ -349,6 +349,24 @@ h1, h2, h3, h4 {
   margin-bottom: 8px;
 }
 
+/* ---------------- Barre d'onglets principale (navigation single-page) ---------------- */
+
+.main-tabbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.main-tabbar .tab-parent-container,
+.main-tabbar > div {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
 /* ---------------- Grille de dashboard (façon Power BI / Tableau) ---------------- */
 
 .dash-grid {
@@ -425,6 +443,84 @@ h1, h2, h3, h4 {
 .page-header-row h1 {
   font-size: 20px;
   margin: 0;
+}
+
+/* ---------------- Accueil : impact et priorisation ---------------- */
+
+.impact-hero {
+  background: var(--petrole-900);
+  color: #fff;
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 4px 0 24px;
+  border-left: 5px solid var(--terracotta-500);
+}
+
+.impact-hero h2 {
+  color: #fff;
+  font-size: 23px;
+  margin: 5px 0 10px;
+}
+
+.impact-hero p {
+  max-width: 930px;
+  margin: 0 0 10px;
+  color: #edf4f3;
+  font-size: 14px;
+}
+
+.impact-eyebrow {
+  color: var(--terracotta-300);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+.impact-question {
+  color: #fff !important;
+  font-weight: 600;
+  margin-bottom: 0 !important;
+}
+
+.section-title {
+  margin: 28px 0 12px;
+  font-size: 17px;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.impact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--petrole-700);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.impact-card-action { border-top-color: var(--terracotta-500); }
+.impact-card h4 { font-size: 15px; margin-bottom: 8px; }
+.impact-card p { color: var(--text-secondary); font-size: 13px; margin: 0; }
+
+.credibility-note {
+  background: rgba(44, 110, 127, 0.08);
+  border: 1px solid var(--petrole-200);
+  border-radius: 8px;
+  margin-top: 28px;
+  padding: 20px 24px;
+}
+
+.credibility-note h3 { font-size: 16px; margin-bottom: 8px; }
+.credibility-note ul { margin: 0 0 10px; padding-left: 20px; font-size: 13px; }
+.credibility-note li { margin-bottom: 6px; }
+.credibility-caveat { color: var(--text-secondary); font-size: 12px; margin: 0; }
+
+@media (max-width: 900px) {
+  .impact-grid { grid-template-columns: 1fr; }
+  .impact-hero { padding: 22px; }
 }
 
 .page-header-sub {
