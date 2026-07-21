@@ -1,29 +1,10 @@
-"""Navbar persistante — présente sur toutes les pages via le layout global de app.py."""
+"""Navbar de marque — la navigation elle-même est gérée par components/tabbar.py."""
 
-import dash
-from dash import html, dcc
+from dash import html
 
 
 def build_navbar():
-    """
-    Construit la barre de navigation. Utilise dash.page_registry pour lister
-    automatiquement les pages enregistrées via dash.register_page(), avec
-    l'ordre défini par le champ `order` de chaque page.
-    """
-    pages = sorted(
-        dash.page_registry.values(), key=lambda p: p.get("order", 99)
-    )
-
-    nav_links = [
-        dcc.Link(
-            page["name"],
-            href=page["relative_path"],
-            className="nav-link",
-            id={"type": "nav-link", "path": page["relative_path"]},
-        )
-        for page in pages
-    ]
-
+    """Bandeau de marque en haut de l'application single-page (pas de liens)."""
     return html.Nav(
         className="navbar",
         children=[
@@ -40,7 +21,6 @@ def build_navbar():
                             ),
                         ],
                     ),
-                    html.Div(className="navbar-links", children=nav_links),
                 ],
             )
         ],
