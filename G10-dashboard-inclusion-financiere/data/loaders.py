@@ -2,8 +2,9 @@
 Chargement centralisé des données.
 
 Principe de robustesse : chaque table est chargée UNE SEULE FOIS au démarrage
-du serveur (grâce à lru_cache), jamais recalculée dans un callback. Les
-callbacks ne font que filtrer/agréger des DataFrames déjà en mémoire.
+du serveur (cache unique _TABLE_CACHE, alimenté par get_table()), jamais
+recalculée dans un callback. Les callbacks ne font que filtrer/agréger des
+DataFrames déjà en mémoire.
 
 Chaque loader a un fallback explicite : si le chargement échoue (repo
 inaccessible, fichier renommé...), on lève une erreur claire au démarrage
@@ -73,47 +74,72 @@ def _safe_read_geojson(url: str, label: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Loaders individuels — chacun mis en cache (appelé une seule fois par process)
-# Utiles pour un accès ciblé depuis une page sans recharger tout `load_all()`
+# Cache générique — SOURCE UNIQUE pour toutes les tables CSV.
+#
+# [Correctif] Avant, load_all() (appelé une fois par app.py au démarrage) et
+# les loaders nommés ci-dessous (load_matrice_globale, etc.) utilisaient CHACUN
+# leur propre cache (un dict local jamais réutilisé pour load_all(), un
+# @lru_cache séparé par fonction pour les loaders nommés) — résultat : chaque
+# fichier était téléchargé PLUSIEURS FOIS (une fois pour rien au démarrage,
+# une fois de plus à la première page qui en avait besoin). Tout passe
+# maintenant par ce seul _TABLE_CACHE, quel que soit le point d'entrée utilisé
+# (get_table("matrice_globale") ou load_matrice_globale()).
 # ---------------------------------------------------------------------------
 
-@lru_cache(maxsize=1)
+_TABLE_CACHE: dict[str, pd.DataFrame] = {}
+
+
+def get_table(key: str) -> pd.DataFrame:
+    """
+    Charge (et met en cache) n'importe quelle table CSV référencée par sa clé
+    dans data/config.PATHS. Point d'accès générique — utilisé directement par
+    les pages, et par les loaders nommés ci-dessous (simples raccourcis).
+    """
+    if key not in _TABLE_CACHE:
+        _TABLE_CACHE[key] = _safe_read_csv(PATHS[key], key)
+    return _TABLE_CACHE[key]
+
+
+# ---------------------------------------------------------------------------
+# Loaders nommés — raccourcis lisibles vers get_table(), rien de plus.
+# Gardés pour ne pas casser les pages qui les importent déjà par leur nom ;
+# ils ne font AUCUN chargement propre (plus de @lru_cache ici : le cache vit
+# uniquement dans _TABLE_CACHE, via get_table()).
+# ---------------------------------------------------------------------------
+
 def load_matrice_globale() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["matrice_globale"], "matrice_globale")
+    return get_table("matrice_globale")
 
 
-@lru_cache(maxsize=1)
 def load_matrice_acp() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["matrice_acp"], "matrice_acp")
+    return get_table("matrice_acp")
 
 
-@lru_cache(maxsize=1)
 def load_matrice_afcm() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["matrice_afcm"], "matrice_afcm")
+    return get_table("matrice_afcm")
 
 
-@lru_cache(maxsize=1)
 def load_clustering_resultats() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["clustering_resultats"], "clustering_resultats")
+    return get_table("clustering_resultats")
 
 
-@lru_cache(maxsize=1)
 def load_modelisation_predictions() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["modelisation_predictions"], "modelisation_predictions")
+    return get_table("modelisation_predictions")
 
 
-@lru_cache(maxsize=1)
 def load_modelisation_importance() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["modelisation_importance"], "modelisation_importance")
+    return get_table("modelisation_importance")
 
 
-@lru_cache(maxsize=1)
 def load_data_dictionary() -> pd.DataFrame:
-    return _safe_read_csv(PATHS["data_dictionary"], "data_dictionary")
+    return get_table("data_dictionary")
 
 
 @lru_cache(maxsize=1)
 def load_geojson_communes() -> dict:
+    # Pas un CSV (dict, pas DataFrame) : reste sur son propre @lru_cache dédié,
+    # une seule fonction y accède partout dans le projet donc pas de risque de
+    # double-chargement ici.
     return _safe_read_geojson(PATHS["geojson_communes"], "geojson_communes")
 
 
@@ -185,20 +211,6 @@ def get_matrice_avec_geojson_name() -> pd.DataFrame:
     return df
 
 
-_TABLE_CACHE: dict[str, pd.DataFrame] = {}
-
-
-def get_table(key: str) -> pd.DataFrame:
-    """
-    Charge (et met en cache) n'importe quelle table CSV référencée par sa clé
-    dans data/config.PATHS. Point d'accès générique pour les pages qui n'ont
-    pas besoin d'un loader dédié.
-    """
-    if key not in _TABLE_CACHE:
-        _TABLE_CACHE[key] = _safe_read_csv(PATHS[key], key)
-    return _TABLE_CACHE[key]
-
-
 @lru_cache(maxsize=1)
 def get_matrice_carte() -> pd.DataFrame:
     """
@@ -217,10 +229,13 @@ def get_matrice_carte() -> pd.DataFrame:
 
 def load_all() -> dict:
     """
-    Charge toutes les tables au démarrage du serveur et les retourne dans un
-    dict. Si une table échoue, l'erreur est loguée mais ne bloque pas le
-    chargement des autres — permet de démarrer le dashboard même si une
-    page spécifique est temporairement indisponible.
+    Charge toutes les tables au démarrage du serveur (via get_table(), donc
+    dans le _TABLE_CACHE réellement utilisé par les pages ensuite — plus de
+    double téléchargement) et les retourne dans un dict pour le logging /
+    l'inspection au démarrage. Si une table échoue, l'erreur est loguée mais
+    ne bloque pas le chargement des autres — permet de démarrer le dashboard
+    même si une page spécifique est temporairement indisponible (elle
+    retentera le chargement, via get_table(), à sa première visite).
     """
     data = {}
 
@@ -263,7 +278,7 @@ def load_all() -> dict:
     erreurs = []
     for key in csv_keys:
         try:
-            data[key] = _safe_read_csv(PATHS[key], key)
+            data[key] = get_table(key)  # peuple _TABLE_CACHE pour de vrai
         except DataLoadError:
             erreurs.append(key)
             data[key] = None
@@ -280,6 +295,6 @@ def load_all() -> dict:
             "Les pages correspondantes afficheront un message d'erreur au lieu de planter."
         )
     else:
-        logger.info("Toutes les tables ont été chargées avec succès.")
+        logger.info("Toutes les tables ont été chargées avec succès (cache unique, aucun re-téléchargement à venir).")
 
     return data

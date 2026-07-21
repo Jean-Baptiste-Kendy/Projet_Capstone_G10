@@ -99,6 +99,8 @@ PATHS = {
 # matrice finale) <-> adm2_name (dans le geojson), avec les mêmes 4 corrections.
 ID_COMMUNE_COL = "id_commune"
 NOM_COMMUNE_COL = "nom_commune"        # présent dans G10_Matrice_Donnees_Finale.csv
+DEPARTEMENT_COL = "departement"
+ARRONDISSEMENT_COL = "arrondissement"  # présent dans G10_Matrice_Donnees_Finale.csv (source IHSI)
 GEOJSON_NAME_PROPERTY = "adm2_name"    # ✅ confirmé par inspection directe du geojson
 GEOJSON_PCODE_PROPERTY = "adm2_pcode"  # code administratif OCHA, alternative possible
 
@@ -147,6 +149,22 @@ CLUSTER_LABELS = {
     "1": "Cluster 1 — IIFT élevé (moy. 75, n=17)",
     "2": "Cluster 2 — IIFT intermédiaire (moy. 33, n=49)",
 }
+
+# Échelle séquentielle à teinte unique pour les 5 classes IIFT (ordinal :
+# Très faible -> Très élevé). Dégradé du bleu-pétrole clair au foncé, 5 pas
+# régulièrement espacés entre petrole_200 et petrole_900 — corrige l'ancienne
+# palette qui mélangeait terracotta (2 premières classes) et petrole (3
+# suivantes), ce qui donnait l'illusion visuelle de 2 groupes plutôt qu'un
+# dégradé ordonné à 5 niveaux.
+CLASSE_IIFT_ORDER = ["Très faible", "Faible", "Moyen", "Élevé", "Très élevé"]
+CLASSE_IIFT_COLORS = ["#B9D4D9", "#8FABB1", "#648189", "#3A5860", "#0F2E38"]
+
+# Indicateurs pour lesquels une valeur supérieure à la moyenne nationale est
+# défavorable (sens inverse des autres indicateurs d'inclusion). Utilisé par
+# la Fiche Commune pour colorer correctement l'écart à la moyenne (vert/teal
+# = favorable, terracotta = défavorable), quel que soit le sens de
+# l'indicateur.
+INVERSE_INDICATORS = {"taux_pauvrete_proxy", "indice_privation_spatiale"}
 
 # Typographie (chargée via Google Fonts dans assets/style.css)
 FONTS = {
