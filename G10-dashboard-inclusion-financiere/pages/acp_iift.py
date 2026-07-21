@@ -8,15 +8,8 @@ import plotly.graph_objects as go
 from components.kpi_card import build_kpi_row
 from components.chart_panel import build_chart_panel, build_grid
 from data.loaders import get_table, DataLoadError
-from data.config import COLORS
+from data.config import COLORS, CLASSE_IIFT_ORDER, CLASSE_IIFT_COLORS
 
-dash.register_page(__name__, path="/acp-iift", name="ACP & IIFT", order=3)
-
-CLASSE_ORDER = ["Très faible", "Faible", "Moyen", "Élevé", "Très élevé"]
-CLASSE_COLORS = [
-    COLORS["terracotta_700"], COLORS["terracotta_500"], COLORS["petrole_200"],
-    COLORS["petrole_500"], COLORS["petrole_900"],
-]
 
 PANEL_HEIGHT = 300
 
@@ -52,8 +45,8 @@ def layout():
     )
 
     # --- Distribution IIFT ---
-    fig_dist = px.histogram(iift, x="IIFT", color="classe_IIFT", category_orders={"classe_IIFT": CLASSE_ORDER},
-                             color_discrete_sequence=CLASSE_COLORS, nbins=24)
+    fig_dist = px.histogram(iift, x="IIFT", color="classe_IIFT", category_orders={"classe_IIFT": CLASSE_IIFT_ORDER},
+                             color_discrete_sequence=CLASSE_IIFT_COLORS, nbins=24)
     fig_dist.update_layout(
         margin=dict(l=10, r=10, t=10, b=10), font_family="Inter, sans-serif", font_size=11,
         paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],

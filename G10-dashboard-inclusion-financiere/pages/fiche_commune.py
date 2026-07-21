@@ -1,13 +1,12 @@
 """Page 6 — Fiche commune : recherche et détail individuel par commune."""
 
 import dash
-from dash import html, dcc, callback, Output, Input
+from dash import html, dcc, callback, Output, Input, no_update
 
 from components.kpi_card import build_kpi_row
 from data.loaders import load_matrice_globale, DataLoadError
-from data.config import NOM_COMMUNE_COL, INDICATOR_LABELS
+from data.config import NOM_COMMUNE_COL, INDICATOR_LABELS, INVERSE_INDICATORS
 
-dash.register_page(__name__, path="/fiche-commune", name="Fiche commune", order=6)
 
 
 def layout():
@@ -48,6 +47,21 @@ def layout():
             html.Div(id="fiche-commune-detail"),
         ],
     )
+
+
+@callback(
+    Output("fiche-commune-search", "value"),
+    Input("selection-store", "data"),
+    prevent_initial_call=True,
+)
+def preremplir_depuis_selection(selection):
+    """Pré-remplit la recherche si une commune a été cliquée sur la carte
+    (selection-store, monté globalement dans app.py — survit au changement
+    d'onglet). Ne fait rien si le store est vide, pour ne pas écraser une
+    recherche déjà en cours si l'utilisateur revient sur cet onglet."""
+    if not selection or not selection.get("commune"):
+        return no_update
+    return selection["commune"]
 
 
 @callback(
@@ -101,7 +115,12 @@ def update_fiche(commune):
         if moyenne is not None and moyenne == moyenne:
             delta = val - moyenne
             delta_str = f"{'+' if delta >= 0 else ''}{delta:.2f} vs moyenne nationale ({moyenne:.2f})"
-            delta_class = "delta-positive" if delta >= 0 else "delta-negative"
+            # Pour les indicateurs "inverses" (ex. pauvreté, privation spatiale),
+            # être au-dessus de la moyenne nationale est défavorable — la
+            # couleur doit donc être inversée par rapport aux indicateurs
+            # d'inclusion classiques (où au-dessus de la moyenne est favorable).
+            est_favorable = (delta < 0) if col in INVERSE_INDICATORS else (delta >= 0)
+            delta_class = "delta-positive" if est_favorable else "delta-negative"
         else:
             delta_str, delta_class = "", ""
 

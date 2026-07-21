@@ -10,7 +10,6 @@ from components.chart_panel import build_chart_panel, build_grid
 from data.loaders import get_table, DataLoadError
 from data.config import COLORS, CLUSTER_COLORS, CLUSTER_LABELS
 
-dash.register_page(__name__, path="/clustering-afcm", name="Clustering & AFCM", order=4)
 
 PANEL_HEIGHT = 280
 

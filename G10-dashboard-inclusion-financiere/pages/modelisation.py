@@ -10,7 +10,6 @@ from components.chart_panel import build_chart_panel, build_grid
 from data.loaders import get_table, DataLoadError
 from data.config import COLORS
 
-dash.register_page(__name__, path="/modelisation", name="Modélisation", order=5)
 
 MODEL_COLUMNS = {"IIFT_predit_ridge": "Ridge", "IIFT_predit_lasso": "Lasso", "IIFT_predit_rf": "Random Forest"}
 PANEL_HEIGHT = 300
@@ -36,14 +35,23 @@ def layout():
         {"label": "Variable retirée (Lasso)", "value": ", ".join(variables_retirees["variable"].tolist())},
     ])
 
-    fig_comp = go.Figure()
-    fig_comp.add_bar(x=comparaison["modele"], y=comparaison["R2_test"], name="R² test", marker_color=COLORS["petrole_700"], yaxis="y1")
-    fig_comp.add_bar(x=comparaison["modele"], y=comparaison["RMSE_test"], name="RMSE test", marker_color=COLORS["terracotta_500"], yaxis="y2")
-    fig_comp.update_layout(
-        barmode="group", yaxis=dict(title="R²", range=[0, 1.05]), yaxis2=dict(title="RMSE", overlaying="y", side="right"),
+    # Deux panneaux séparés plutôt qu'un double axe Y : des barres groupées sur
+    # deux échelles différentes (R² 0-1 vs RMSE en points d'IIFT) invitent à
+    # comparer des hauteurs de barres qui ne sont pas comparables — risque de
+    # lecture erronée, surtout à l'oral où le public n'a que quelques secondes
+    # par graphique.
+    fig_r2 = go.Figure(go.Bar(x=comparaison["modele"], y=comparaison["R2_test"], marker_color=COLORS["petrole_700"]))
+    fig_r2.update_layout(
+        yaxis=dict(title="R² test", range=[0, 1.05]),
         margin=dict(l=10, r=10, t=10, b=10), height=PANEL_HEIGHT,
         font_family="Inter, sans-serif", font_size=10, paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
-        legend=dict(orientation="h", yanchor="bottom", y=1.02, font=dict(size=9)),
+    )
+
+    fig_rmse = go.Figure(go.Bar(x=comparaison["modele"], y=comparaison["RMSE_test"], marker_color=COLORS["terracotta_500"]))
+    fig_rmse.update_layout(
+        yaxis=dict(title="RMSE test"),
+        margin=dict(l=10, r=10, t=10, b=10), height=PANEL_HEIGHT,
+        font_family="Inter, sans-serif", font_size=10, paper_bgcolor=COLORS["surface"], plot_bgcolor=COLORS["surface"],
     )
 
     top_importance = importance.nlargest(10, "moyenne_4_methodes").sort_values("moyenne_4_methodes")
@@ -78,8 +86,9 @@ def layout():
             ),
             kpis,
             build_grid([
-                build_chart_panel("Comparaison des modèles", fig_comp),
-                build_chart_panel("IIFT prédit vs réel", scatter_selector),
+                build_chart_panel("Comparaison des modèles — R²", fig_r2),
+                build_chart_panel("Comparaison des modèles — RMSE", fig_rmse),
+                build_chart_panel("IIFT prédit vs réel", scatter_selector, span="full"),
                 build_chart_panel("Importance des variables (top 10)", fig_importance, span="full"),
             ]),
         ],

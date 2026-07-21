@@ -15,7 +15,6 @@ from dash import html
 
 from data.config import DATE_SOUTENANCE, GITHUB_USER, GITHUB_REPO
 
-dash.register_page(__name__, path="/presentation", name="Présentation", order=1)
 
 YOUTUBE_VIDEO_ID = ""  # ⚠️ à renseigner : ID de la vidéo YouTube non-listée
 LOCAL_VIDEO_PATH = "/assets/presentation.mp4"  # fallback local

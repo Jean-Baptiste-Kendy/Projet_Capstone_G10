@@ -6,7 +6,6 @@ from dash import html, dcc, callback, Output, Input
 from data.loaders import get_table, DataLoadError
 from data.config import COLORS
 
-dash.register_page(__name__, path="/methodologie", name="Méthodologie", order=7)
 
 TAB_STYLE = {"padding": "8px 14px", "fontSize": "12px"}
 TAB_SELECTED_STYLE = {
