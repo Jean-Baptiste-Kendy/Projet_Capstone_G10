@@ -1,20 +1,28 @@
 # Version livrée
 
-Cette archive contient le dashboard **complet et cumulatif** (Phases 1 à 4).
-Il n'existe pas de version séparée par phase — chaque phase a modifié ce même
-projet, qui est donc à jour dans son intégralité.
+Cette archive contient le dashboard **complet et cumulatif**. Il n'existe pas
+de version séparée par phase — chaque étape a modifié ce même projet, qui est
+donc à jour dans son intégralité.
 
-## Contenu par phase (toutes incluses ici)
+## ⚠️ Architecture : application single-page (mise à jour la plus récente)
 
-- **Phase 1** — Fondations : `app.py`, navigation multi-pages, composants
-  (navbar, filter_bar, kpi_card, footer), chargement de données avec cache,
-  charte graphique bleu-pétrole/terracotta.
-- **Phase 2** — Carte interactive (choroplèthe, jointure noms) + Fiche commune
+Le dashboard est maintenant une **application single-page** : une seule URL,
+une barre d'onglets en haut (façon Power BI/Tableau) qui bascule le contenu
+sans rechargement de page — plus de navigation multi-URL comme dans les
+premières versions.
+
+## Contenu
+
+- **Fondations** : `app.py`, barre d'onglets (`components/tabbar.py`),
+  composants (navbar, footer, filter_bar, kpi_card, chart_panel), chargement
+  de données avec cache, charte graphique bleu-pétrole/terracotta.
+- **Carte interactive** (choroplèthe, jointure noms) + **Fiche commune**
   (recherche, comparaison nationale).
-- **Phase 3** — Toutes les données réelles branchées (35 chemins GitHub
-  vérifiés) : IIFT + clusters actifs sur la carte, pages ACP/IIFT,
-  Clustering & AFCM, Modélisation supervisée.
-- **Phase 4** — Page Accueil (storytelling 3 slides), page Méthodologie,
+- **Toutes les données réelles branchées** (35 chemins GitHub vérifiés) :
+  IIFT + clusters actifs sur la carte, pages ACP/IIFT, Clustering & AFCM,
+  Modélisation supervisée — toutes en layout grille compact (panneaux
+  côte à côte, pas un rapport linéaire).
+- **Accueil** (storytelling 3 slides), **Méthodologie** (en onglets internes),
   durcissement (test de panne réseau simulée), fichiers de déploiement
   (`Procfile`, `.gitignore`, `README.md`).
 
@@ -31,3 +39,4 @@ pip install -r requirements.txt
 python app.py
 ```
 Ouvrir `http://localhost:8050`.
+

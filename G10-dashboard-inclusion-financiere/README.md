@@ -14,15 +14,24 @@ Puis ouvrir `http://localhost:8050`.
 ## Structure
 
 ```
-app.py                  # point d'entrée, layout global, navigation
-pages/                  # une page par module (dash.register_page)
-components/             # navbar, filter_bar, kpi_card, footer (réutilisables)
+app.py                  # point d'entrée, layout global, dispatch des onglets
+pages/                  # une fonction layout() par section (appelée par app.py)
+components/
+  navbar.py              # bandeau de marque
+  tabbar.py              # barre d'onglets principale (navigation)
+  filter_bar.py          # filtres partagés (page Carte)
+  kpi_card.py            # cartes KPI
+  chart_panel.py         # panneau de visualisation (grille façon Power BI)
+  footer.py
 data/
   config.py             # chemins GitHub raw + charte graphique (source unique de vérité)
-  loaders.py            # chargement + cache des tables, jointure carte<->données
+  loaders.py             # chargement + cache des tables, jointure carte<->données
 assets/
-  style.css             # charte bleu-pétrole / terracotta
+  style.css              # charte bleu-pétrole / terracotta + grille + onglets
 ```
+
+Application **single-page** : une seule URL, une barre d'onglets en haut
+bascule le contenu (pas de navigation par URL séparée).
 
 ## Principe de robustesse
 
