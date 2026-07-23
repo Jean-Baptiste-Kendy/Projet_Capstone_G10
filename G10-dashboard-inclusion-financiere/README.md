@@ -1,4 +1,4 @@
-# Dashboard — Inclusion Financière en Haïti (Capstone G10)
+# Analyse territoriale de l'inclusion financière en Haïti (Capstone G10)
 
 Application web Dash présentant les résultats du projet : IIFT, clustering K-Means,
 AFCM et modélisation supervisée, sur les 140 communes d'Haïti.

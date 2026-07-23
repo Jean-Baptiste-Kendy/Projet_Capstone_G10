@@ -37,7 +37,7 @@ logger.info("Chargement terminé.")
 app = dash.Dash(
     __name__,
     suppress_callback_exceptions=True,
-    title="Inclusion Financière en Haïti — Dashboard Capstone G10",
+    title="Analyse territoriale de l'inclusion financière en Haïti",
     update_title=None,
 )
 
