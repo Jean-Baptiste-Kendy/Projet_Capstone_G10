@@ -26,6 +26,7 @@ CLUSTER_LABELS).
 
 import dash
 from dash import html, dcc, callback, Output, Input, State, ctx, no_update
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -40,6 +41,10 @@ from data.config import (
     CLASSE_IIFT_ORDER,
     CLASSE_IIFT_COLORS,
     DEFAULT_MAP_INDICATOR,
+    BRH_SERVICE_INDICATOR_LABELS,
+    OFFER_INDICATOR_LABELS,
+    DEMAND_INDICATOR_LABELS,
+    SUM_INDICATORS,
     GEOJSON_NAME_PROPERTY,
     DEPARTEMENT_COL,
     ARRONDISSEMENT_COL,
@@ -84,21 +89,72 @@ def layout():
                 cluster_available=True,
             ),
             html.Div(
-                style={"maxWidth": "360px", "marginBottom": "16px"},
+                className="map-indicator-selectors",
                 children=[
-                    html.Label("Indicateur affiché", className="filter-label"),
-                    dcc.Dropdown(
-                        id="carte-indicateur",
-                        options=indicator_options,
-                        value=DEFAULT_MAP_INDICATOR,
-                        clearable=False,
+                    html.Div(
+                        children=[
+                            html.Label("Choisir un indicateur d'offre", className="filter-label"),
+                            dcc.Dropdown(
+                                id="carte-offre-indicateur",
+                                options=[{"label": lbl, "value": col} for col, lbl in OFFER_INDICATOR_LABELS.items()],
+                                placeholder="Sélectionner un indicateur d'offre",
+                                clearable=True,
+                            ),
+                        ],
+                    ),
+                    html.Div(
+                        children=[
+                            html.Label("Choisir un indicateur de demande", className="filter-label"),
+                            dcc.Dropdown(
+                                id="carte-demande-indicateur",
+                                options=[{"label": lbl, "value": col} for col, lbl in DEMAND_INDICATOR_LABELS.items()],
+                                placeholder="Sélectionner un indicateur de demande",
+                                clearable=True,
+                            ),
+                        ],
+                    ),
+                    html.Div(
+                        children=[
+                            html.Label("Autre indicateur d'analyse", className="filter-label"),
+                            dcc.Dropdown(
+                                id="carte-analyse-indicateur",
+                                options=indicator_options,
+                                value=DEFAULT_MAP_INDICATOR,
+                                clearable=True,
+                            ),
+                        ],
                     ),
                 ],
             ),
-            dcc.Loading(
-                type="circle",
-                color=COLORS["terracotta_500"],
-                children=dcc.Graph(id="carte-choropleth", style={"height": "650px"}),
+            html.Div(
+                className="map-analysis-grid",
+                children=[
+                    html.Div(
+                        className="chart-panel",
+                        children=[
+                            html.Div("Carte des communes sélectionnées", className="chart-panel-header"),
+                            dcc.Loading(
+                                type="circle",
+                                color=COLORS["terracotta_500"],
+                                children=dcc.Graph(id="carte-choropleth", style={"height": "650px"}),
+                            ),
+                        ],
+                    ),
+                    html.Div(
+                        className="chart-panel map-side-chart",
+                        children=[
+                            html.Div(id="carte-bar-title", className="chart-panel-header"),
+                            html.Div(
+                                className="map-side-chart-body",
+                                children=dcc.Loading(
+                                    type="circle",
+                                    color=COLORS["terracotta_500"],
+                                    children=dcc.Graph(id="carte-barres", config={"displayModeBar": False}),
+                                ),
+                            ),
+                        ],
+                    ),
+                ],
             ),
         ],
     )
@@ -137,9 +193,9 @@ def toggle_niveau_geo(niveau):
         visible if show_dept else hidden,
         visible if show_arr else hidden,
         visible if show_com else hidden,
-        no_update if show_dept else None,
-        no_update if show_arr else None,
-        no_update if show_com else None,
+        no_update if show_dept else [],
+        no_update if show_arr else [],
+        no_update if show_com else [],
     )
 
 
@@ -158,7 +214,7 @@ def update_arrondissement_options(departement):
         return [], None
 
     if departement:
-        df = df[df[DEPARTEMENT_COL] == departement]
+        df = df[df[DEPARTEMENT_COL].isin(departement)]
     arrondissements = sorted(df[ARRONDISSEMENT_COL].dropna().unique())
     return [{"label": a, "value": a} for a in arrondissements], None
 
@@ -179,11 +235,45 @@ def update_commune_options(arrondissement, departement):
         return [], None
 
     if arrondissement:
-        df = df[df[ARRONDISSEMENT_COL] == arrondissement]
+        df = df[df[ARRONDISSEMENT_COL].isin(arrondissement)]
     elif departement:
-        df = df[df[DEPARTEMENT_COL] == departement]
+        df = df[df[DEPARTEMENT_COL].isin(departement)]
     communes = sorted(df[NOM_COMMUNE_COL].dropna().unique())
     return [{"label": c, "value": c} for c in communes], None
+
+
+@callback(
+    Output(f"{FILTER_BAR_ID_PREFIX}-departement", "value", allow_duplicate=True),
+    Output(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "value", allow_duplicate=True),
+    Output(f"{FILTER_BAR_ID_PREFIX}-commune", "value", allow_duplicate=True),
+    Input("carte-barres", "clickData"),
+    State(f"{FILTER_BAR_ID_PREFIX}-niveau-geo", "value"),
+    prevent_initial_call=True,
+)
+def filtrer_depuis_barre(click_data, niveau):
+    """Un clic sur une barre applique la zone correspondante aux filtres."""
+    if not click_data or niveau == "pays":
+        return no_update, no_update, no_update
+
+    try:
+        zone = click_data["points"][0]["y"]
+        df = get_matrice_carte()
+    except (KeyError, IndexError, DataLoadError):
+        return no_update, no_update, no_update
+
+    if niveau == "departement":
+        return [zone], [], []
+    if niveau == "arrondissement":
+        match = df[df[ARRONDISSEMENT_COL] == zone]
+        return ([match.iloc[0][DEPARTEMENT_COL]], [zone], []) if not match.empty else (no_update, no_update, no_update)
+    if niveau == "commune":
+        match = df[df[NOM_COMMUNE_COL] == zone]
+        return (
+            [match.iloc[0][DEPARTEMENT_COL]],
+            [match.iloc[0][ARRONDISSEMENT_COL]],
+            [zone],
+        ) if not match.empty else (no_update, no_update, no_update)
+    return no_update, no_update, no_update
 
 
 # ---------------------------------------------------------------------------
@@ -192,10 +282,15 @@ def update_commune_options(arrondissement, departement):
 
 @callback(
     Output("carte-choropleth", "figure"),
+    Output("carte-barres", "figure"),
+    Output("carte-bar-title", "children"),
     Output(f"{FILTER_BAR_ID_PREFIX}-total", "children"),
     Output(f"{FILTER_BAR_ID_PREFIX}-selectionne", "children"),
     Output("selection-store", "data"),
-    Input("carte-indicateur", "value"),
+    Input("carte-offre-indicateur", "value"),
+    Input("carte-demande-indicateur", "value"),
+    Input("carte-analyse-indicateur", "value"),
+    Input(f"{FILTER_BAR_ID_PREFIX}-niveau-geo", "value"),
     Input(f"{FILTER_BAR_ID_PREFIX}-departement", "value"),
     Input(f"{FILTER_BAR_ID_PREFIX}-arrondissement", "value"),
     Input(f"{FILTER_BAR_ID_PREFIX}-commune", "value"),
@@ -203,21 +298,25 @@ def update_commune_options(arrondissement, departement):
     Input("carte-choropleth", "clickData"),
     State("selection-store", "data"),
 )
-def update_carte(indicateur, departement, arrondissement, commune, cluster, click_data, selection):
+def update_carte(offre_indicateur, demande_indicateur, analyse_indicateur, niveau, departement, arrondissement, commune, cluster, click_data, selection):
+    # Un indicateur de demande choisi remplace temporairement l'indicateur
+    # d'offre afin de comparer facilement l'offre et les caractéristiques de
+    # la population avec les mêmes filtres territoriaux.
+    indicateur = demande_indicateur or offre_indicateur or analyse_indicateur or DEFAULT_MAP_INDICATOR
     try:
         df = get_matrice_carte()
         geojson = load_geojson_communes()
     except DataLoadError:
-        return go.Figure(), "—", "—", selection or {"commune": None, "cluster": "all"}
+        return go.Figure(), go.Figure(), "Graphique indisponible", "—", "—", selection or {"commune": None, "cluster": "all"}
 
     total = len(df)
     df_filtre = df
     if departement:
-        df_filtre = df_filtre[df_filtre[DEPARTEMENT_COL] == departement]
+        df_filtre = df_filtre[df_filtre[DEPARTEMENT_COL].isin(departement)]
     if arrondissement:
-        df_filtre = df_filtre[df_filtre[ARRONDISSEMENT_COL] == arrondissement]
+        df_filtre = df_filtre[df_filtre[ARRONDISSEMENT_COL].isin(arrondissement)]
     if commune:
-        df_filtre = df_filtre[df_filtre[NOM_COMMUNE_COL] == commune]
+        df_filtre = df_filtre[df_filtre[NOM_COMMUNE_COL].isin(commune)]
     if cluster and cluster != "all":
         df_filtre = df_filtre[df_filtre["cluster_kmeans"] == str(cluster)]
     n_selection = len(df_filtre)
@@ -275,7 +374,12 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
         )
         legend_title = "Classe IIFT"
     else:
-        label = INDICATOR_LABELS.get(indicateur, indicateur)
+        label = (
+            OFFER_INDICATOR_LABELS.get(indicateur)
+            or DEMAND_INDICATOR_LABELS.get(indicateur)
+            or BRH_SERVICE_INDICATOR_LABELS.get(indicateur)
+            or INDICATOR_LABELS.get(indicateur, indicateur)
+        )
         fig = px.choropleth_mapbox(
             df_filtre,
             color=indicateur,
@@ -299,4 +403,70 @@ def update_carte(indicateur, departement, arrondissement, commune, cluster, clic
     if not is_categorical:
         fig.update_layout(coloraxis_colorbar=dict(title=legend_title, x=0.98))
 
-    return fig, str(total), str(n_selection), nouvelle_selection
+    bar_fig, bar_title = build_bar_chart(df_filtre, indicateur, niveau)
+    return fig, bar_fig, bar_title, str(total), str(n_selection), nouvelle_selection
+
+
+def build_bar_chart(df, indicateur, niveau):
+    """Construit le graphique adjacent, agrégé au niveau administratif choisi."""
+    level_columns = {
+        "pays": (None, "Haïti"),
+        "departement": (DEPARTEMENT_COL, "département"),
+        "arrondissement": (ARRONDISSEMENT_COL, "arrondissement"),
+        "commune": (NOM_COMMUNE_COL, "commune"),
+    }
+    group_col, level_label = level_columns.get(niveau, (NOM_COMMUNE_COL, "commune"))
+    indicator_label = CATEGORICAL_INDICATORS.get(
+        indicateur,
+        OFFER_INDICATOR_LABELS.get(
+            indicateur,
+            DEMAND_INDICATOR_LABELS.get(
+                indicateur,
+                BRH_SERVICE_INDICATOR_LABELS.get(indicateur, INDICATOR_LABELS.get(indicateur, indicateur)),
+            ),
+        ),
+    )
+
+    if df.empty:
+        fig = go.Figure()
+        fig.add_annotation(text="Aucune zone ne correspond à cette sélection.", showarrow=False)
+        fig.update_layout(height=360, margin=dict(l=15, r=15, t=20, b=20), paper_bgcolor=COLORS["surface"])
+        return fig, f"{indicator_label} par {level_label}"
+
+    if indicateur in CATEGORICAL_INDICATORS:
+        values = df.groupby(group_col).size().reset_index(name="value") if group_col else pd.DataFrame({"zone": ["Haïti"], "value": [len(df)]})
+        if group_col:
+            values = values.rename(columns={group_col: "zone"})
+        value_label = "Nombre de communes"
+    elif group_col:
+        aggregation = "sum" if indicateur in SUM_INDICATORS else "mean"
+        values = df.groupby(group_col, as_index=False)[indicateur].agg(aggregation).rename(columns={group_col: "zone", indicateur: "value"})
+        value_label = "Total" if aggregation == "sum" else "Moyenne"
+    else:
+        aggregation = "sum" if indicateur in SUM_INDICATORS else "mean"
+        values = pd.DataFrame({"zone": ["Haïti"], "value": [getattr(df[indicateur], aggregation)()]})
+        value_label = "Total" if aggregation == "sum" else "Moyenne"
+
+    values = values.sort_values("value", ascending=True)
+    height = max(360, min(26 * len(values) + 110, 2500))
+    fig = px.bar(
+        values,
+        x="value",
+        y="zone",
+        orientation="h",
+        text="value",
+        color_discrete_sequence=[COLORS["petrole_700"]],
+        labels={"value": value_label, "zone": ""},
+    )
+    fig.update_traces(texttemplate="%{text:.2f}", textposition="outside", cliponaxis=False)
+    fig.update_layout(
+        height=height,
+        margin=dict(l=10, r=60, t=12, b=35),
+        paper_bgcolor=COLORS["surface"],
+        plot_bgcolor=COLORS["surface"],
+        font_family="Inter, sans-serif",
+        showlegend=False,
+        yaxis={"automargin": True},
+        xaxis={"gridcolor": COLORS["border"], "zerolinecolor": COLORS["border"]},
+    )
+    return fig, f"{indicator_label} par {level_label}"
