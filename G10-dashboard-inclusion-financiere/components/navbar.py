@@ -16,7 +16,7 @@ def build_navbar():
                         children=[
                             html.Span("G10", className="navbar-brand-mark"),
                             html.Span(
-                                "Inclusion Financière — Haïti",
+                                "Analyse territoriale de l'inclusion financière en Haïti",
                                 className="navbar-brand-text",
                             ),
                         ],

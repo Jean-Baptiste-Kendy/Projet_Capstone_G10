@@ -21,6 +21,8 @@ donc un Store défini ici perdrait son contenu à chaque changement d'onglet.
 
 from dash import html, dcc
 
+from data.config import CLUSTER_LABELS_COURT
+
 
 FILTER_BAR_ID_PREFIX = "filter-bar"
 
@@ -54,14 +56,19 @@ def build_filter_bar(
     arrondissements = arrondissements or []
     communes = communes or []
 
+    # [Correctif] Les libellés de clusters étaient recopiés en dur ici, avec
+    # leur propre terminologie — en pratique, désynchronisés dès que
+    # CLUSTER_LABELS a changé dans config.py (c'est exactement ce qui vient
+    # de se produire). On lit maintenant CLUSTER_LABELS_COURT, source unique
+    # de vérité pour la terminologie des clusters, dans l'ordre 0 -> 2 -> 1
+    # (sévérité croissante, cohérent avec les graphiques des autres pages).
     cluster_dropdown = dcc.Dropdown(
         id=f"{FILTER_BAR_ID_PREFIX}-cluster",
         options=(
-            [
-                {"label": "Tous les clusters", "value": "all"},
-                {"label": "Cluster 0", "value": 0},
-                {"label": "Cluster 1", "value": 1},
-                {"label": "Cluster 2", "value": 2},
+            [{"label": "Tous les clusters", "value": "all"}]
+            + [
+                {"label": CLUSTER_LABELS_COURT[cid], "value": int(cid)}
+                for cid in ["0", "2", "1"]
             ]
             if cluster_available
             else [{"label": "Indisponible", "value": "all"}]
@@ -102,7 +109,8 @@ def build_filter_bar(
                     dcc.Dropdown(
                         id=f"{FILTER_BAR_ID_PREFIX}-departement",
                         options=[{"label": d, "value": d} for d in departements],
-                        placeholder="Tous",
+                        placeholder="Tous les départements",
+                        multi=True,
                         clearable=True,
                     ),
                 ],
@@ -116,7 +124,8 @@ def build_filter_bar(
                     dcc.Dropdown(
                         id=f"{FILTER_BAR_ID_PREFIX}-arrondissement",
                         options=[{"label": a, "value": a} for a in arrondissements],
-                        placeholder="Tous",
+                        placeholder="Tous les arrondissements",
+                        multi=True,
                         clearable=True,
                     ),
                 ],
@@ -131,6 +140,7 @@ def build_filter_bar(
                         id=f"{FILTER_BAR_ID_PREFIX}-commune",
                         options=[{"label": c, "value": c} for c in communes],
                         placeholder="Toutes",
+                        multi=True,
                         clearable=True,
                     ),
                 ],
