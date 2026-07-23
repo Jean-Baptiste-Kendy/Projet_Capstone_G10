@@ -27,6 +27,7 @@ from data.config import (
     NOM_COMMUNE_COL,
     GEOJSON_NAME_PROPERTY,
     CORRESPONDANCE_NOMS_MANUELLE,
+    GROUPES_SERVICES,
 )
 
 logging.basicConfig(level=logging.INFO)
@@ -46,6 +47,27 @@ def _safe_read_csv(url: str, label: str) -> pd.DataFrame:
         resp = requests.get(url, timeout=REQUEST_TIMEOUT)
         resp.raise_for_status()
         df = pd.read_csv(io.StringIO(resp.text))
+        logger.info(f"[OK] {label} chargé : {df.shape[0]} lignes x {df.shape[1]} colonnes")
+        return df
+    except Exception as e:
+        logger.error(f"[ÉCHEC] Impossible de charger '{label}' depuis {url} : {e}")
+        raise DataLoadError(
+            f"Échec du chargement de '{label}'. Vérifiez l'URL dans data/config.py "
+            f"et la disponibilité du repo GitHub. Détail : {e}"
+        ) from e
+
+
+def _safe_read_excel(url: str, label: str) -> pd.DataFrame:
+    """Charge le classeur BRH dont les en-têtes commencent à la ligne 2."""
+    try:
+        resp = requests.get(url, timeout=REQUEST_TIMEOUT)
+        resp.raise_for_status()
+        df = pd.read_excel(
+            io.BytesIO(resp.content),
+            sheet_name="Services_Financiers_Communes",
+            header=1,
+        )
+        df = df.dropna(subset=[ID_COMMUNE_COL]).copy()
         logger.info(f"[OK] {label} chargé : {df.shape[0]} lignes x {df.shape[1]} colonnes")
         return df
     except Exception as e:
@@ -91,12 +113,13 @@ _TABLE_CACHE: dict[str, pd.DataFrame] = {}
 
 def get_table(key: str) -> pd.DataFrame:
     """
-    Charge (et met en cache) n'importe quelle table CSV référencée par sa clé
+    Charge (et met en cache) une table CSV ou le classeur BRH référencé par sa clé
     dans data/config.PATHS. Point d'accès générique — utilisé directement par
     les pages, et par les loaders nommés ci-dessous (simples raccourcis).
     """
     if key not in _TABLE_CACHE:
-        _TABLE_CACHE[key] = _safe_read_csv(PATHS[key], key)
+        loader = _safe_read_excel if PATHS[key].lower().endswith(".xlsx") else _safe_read_csv
+        _TABLE_CACHE[key] = loader(PATHS[key], key)
     return _TABLE_CACHE[key]
 
 
@@ -224,6 +247,58 @@ def get_matrice_carte() -> pd.DataFrame:
     df = df.merge(iift, on=ID_COMMUNE_COL, how="left")
     df = df.merge(clusters, on=ID_COMMUNE_COL, how="left")
     df["cluster_kmeans"] = df["cluster_kmeans"].astype("Int64").astype(str)
+
+    # Agrège les points BRH par famille de prestataires. Toutes les valeurs
+    # manquantes signifient qu'aucun point n'a été recensé dans la commune.
+    services = get_table("brh_services")
+    service_columns = []
+    group_columns = {
+        "Maison de Transfert": "brh_maison_transfert",
+        "Agent Non Bancaire": "brh_agent_non_bancaire",
+        "Banque": "brh_banque",
+        "ATM": "brh_atm",
+        "Microfinance": "brh_microfinance",
+        "Caisse Populaire": "brh_caisse_populaire",
+    }
+    for group_name, source_columns in GROUPES_SERVICES.items():
+        target_column = group_columns[group_name]
+        services[target_column] = (
+            services[source_columns].apply(pd.to_numeric, errors="coerce").fillna(0).sum(axis=1)
+        )
+        service_columns.append(target_column)
+    services["brh_total_points"] = services[service_columns].sum(axis=1)
+    df = df.merge(services[[ID_COMMUNE_COL, "brh_total_points", *service_columns]], on=ID_COMMUNE_COL, how="left")
+    df[["brh_total_points", *service_columns]] = df[["brh_total_points", *service_columns]].fillna(0)
+
+    # Indicateurs de demande calculés à partir des données IHSI déjà présentes
+    # dans la matrice. Ils restent disponibles commune par commune et sont
+    # ensuite correctement additionnés pour les variables de volume.
+    df["population_rurale"] = df["population_totale"] - df["population_urbaine"]
+    df["pop_feminine_rurale"] = df["pop_feminine"] - df["pop_feminine_urbaine"]
+    df["pop_masculine_rurale"] = df["pop_masculine"] - df["pop_masculine_urbaine"]
+    df["nb_menages_ruraux"] = df["nb_menages"] - df["nb_menages_urbains"]
+    df["superficie_rurale_km2"] = df["superficie_km2"] - df["superficie_urbaine_km2"]
+    df["population_18_plus"] = df["pop_masculine_18_plus"] + df["pop_feminine_18_plus"]
+    df["population_18_plus_urbaine"] = (
+        df["pop_masculine_18_plus_urbaine"] + df["pop_feminine_18_plus_urbaine"]
+    )
+    df["population_18_plus_rurale"] = df["population_18_plus"] - df["population_18_plus_urbaine"]
+
+    def ratio(numerator, denominator):
+        return numerator.div(denominator.replace(0, pd.NA))
+
+    df["part_rurale_superficie_pct"] = ratio(df["superficie_rurale_km2"], df["superficie_km2"]) * 100
+    df["part_rurale_population_pct"] = ratio(df["population_rurale"], df["population_totale"]) * 100
+    df["part_urbaine_superficie_pct"] = ratio(df["superficie_urbaine_km2"], df["superficie_km2"]) * 100
+    df["part_urbaine_pct"] = ratio(df["population_urbaine"], df["population_totale"]) * 100
+    df["taille_moyenne_menage_rurale"] = ratio(df["population_rurale"], df["nb_menages_ruraux"])
+    df["taille_moyenne_menage_urbaine"] = ratio(df["population_urbaine"], df["nb_menages_urbains"])
+    df["densite_population_totale"] = ratio(df["population_totale"], df["superficie_km2"])
+    df["densite_population_rurale"] = ratio(df["population_rurale"], df["superficie_rurale_km2"])
+    df["densite_population_urbaine"] = ratio(df["population_urbaine"], df["superficie_urbaine_km2"])
+    df["ratio_genre"] = ratio(df["pop_masculine"], df["pop_feminine"]) * 100
+    df["ratio_genre_rural"] = ratio(df["pop_masculine_rurale"], df["pop_feminine_rurale"]) * 100
+    df["ratio_genre_urbain"] = ratio(df["pop_masculine_urbaine"], df["pop_feminine_urbaine"]) * 100
     return df
 
 
