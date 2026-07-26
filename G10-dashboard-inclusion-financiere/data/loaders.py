@@ -267,6 +267,15 @@ def get_matrice_carte() -> pd.DataFrame:
         )
         service_columns.append(target_column)
     services["brh_total_points"] = services[service_columns].sum(axis=1)
+
+    # matrice_globale contient déjà d'anciennes colonnes brh_* (calculées en
+    # amont dans un notebook précédent) ; on les supprime avant la fusion pour
+    # que le merge ne les renomme pas en _x/_y et que les valeurs recalculées
+    # ci-dessus (depuis le fichier BRH) fassent foi.
+    colonnes_a_ecraser = [c for c in ["brh_total_points", *service_columns] if c in df.columns]
+    if colonnes_a_ecraser:
+        df = df.drop(columns=colonnes_a_ecraser)
+
     df = df.merge(services[[ID_COMMUNE_COL, "brh_total_points", *service_columns]], on=ID_COMMUNE_COL, how="left")
     df[["brh_total_points", *service_columns]] = df[["brh_total_points", *service_columns]].fillna(0)
 
