@@ -13,10 +13,10 @@ Stratégie de robustesse (cf. plan directeur) :
 import dash
 from dash import html
 
-from data.config import DATE_SOUTENANCE, GITHUB_USER, GITHUB_REPO
+from data.config import GITHUB_USER, GITHUB_REPO
 
 
-YOUTUBE_VIDEO_ID = ""  # ⚠️ à renseigner : ID de la vidéo YouTube non-listée
+YOUTUBE_VIDEO_ID = "cvpMe3kDqnI"  # https://youtu.be/cvpMe3kDqnI
 LOCAL_VIDEO_PATH = "/assets/presentation.mp4"  # fallback local
 
 
@@ -26,9 +26,9 @@ def layout():
     return html.Div(
         className="page-container",
         children=[
-            html.H1("Présentation de la soutenance"),
+            html.H1("Comprendre l'inclusion financière"),
             html.P(
-                f"Soutenance orale du projet — {DATE_SOUTENANCE}.",
+                "LES EXPERTS BANQUE - Inclusion financière",
                 style={"color": "var(--text-secondary)"},
             ),
             video_block,

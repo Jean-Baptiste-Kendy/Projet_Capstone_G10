@@ -462,7 +462,17 @@ def filtrer_depuis_carte(click_data, niveau):
     return no_update, no_update, no_update, no_update
 
 
-def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
+def build_choropleth_agrege(
+    df_filtre,
+    niveau,
+    indicateur,
+    indicator_label,
+    offre_indicateur,
+    offre_label,
+    est_offre_points_acces,
+    cols_pour_total,
+    total_points_valeur,
+):
     """
     Choroplèthe pour les niveaux agrégés "pays" / "departement" / "arrondissement" :
     - fond de carte : contour national (admin0), contours départementaux OCHA
@@ -470,9 +480,11 @@ def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
     - couleur : cluster/classe IIFT majoritaire de la zone si l'indicateur choisi
       est catégoriel, sinon somme/moyenne de l'indicateur (même règle que le
       graphique en barres) ;
-    - survol : toujours population totale, IIFT moyen, nombre de communes et la
-      composition (%) en clusters K-Means de la zone, quel que soit l'indicateur
-      affiché en couleur.
+    - survol : identité géographique (Département et/ou Arrondissement selon le
+      niveau), TOUJOURS la composition (%) en clusters K-Means de la zone (quel
+      que soit l'indicateur affiché en couleur), l'indicateur de demande choisi,
+      puis l'indicateur d'offre choisi (+ part du total national de points
+      d'accès, ou nombre brut de points d'accès selon le cas).
     """
     zone_stats = build_zone_stats(df_filtre, niveau)
     if zone_stats.empty:
@@ -497,13 +509,6 @@ def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
         featureidkey = "properties.arrondissement"
         zone_stats["zone_geojson"] = zone_stats["zone"]
 
-    hover_data = {
-        "zone_geojson": False,
-        "n_communes": True,
-        "population_totale": ":,.0f",
-        "IIFT_moyen": ":.1f",
-        **{c: ":.1f" for c in cluster_cols},
-    }
     common_kwargs = dict(
         geojson=geojson,
         locations="zone_geojson",
@@ -512,9 +517,103 @@ def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
         zoom=6.7,
         center={"lat": 18.97, "lon": -72.5},
         opacity=0.85,
-        hover_name="zone",
-        hover_data=hover_data,
     )
+
+    # [Ajout] Valeur "démande" (majoritaire si catégoriel, sinon somme/moyenne),
+    # valeur "offre" et nombre brut de points d'accès — calculés UNE SEULE FOIS
+    # ici, indépendamment de la branche couleur choisie ci-dessous, puisque le
+    # survol doit toujours afficher ces trois informations quel que soit
+    # l'indicateur qui pilote la couleur de la carte.
+    temp = df_filtre.copy()
+    if group_col is None:
+        temp["_zone"] = "Haïti"
+        group_col_local = "_zone"
+    else:
+        group_col_local = group_col
+
+    if indicateur in CATEGORICAL_INDICATORS:
+        counts = temp.groupby([group_col_local, indicateur]).size().rename("n").reset_index()
+        counts["pct"] = counts.groupby(group_col_local)["n"].transform(lambda s: s / s.sum() * 100)
+        majoritaire = (
+            counts.loc[counts.groupby(group_col_local)["pct"].idxmax()]
+            .rename(columns={group_col_local: "zone", indicateur: "_valeur_demande_brute"})[["zone", "_valeur_demande_brute"]]
+        )
+        zone_stats = zone_stats.merge(majoritaire, on="zone", how="left")
+        if indicateur == "cluster_kmeans":
+            zone_stats["_valeur_demande"] = zone_stats["_valeur_demande_brute"].map(
+                lambda k: CLUSTER_LABELS_COURT.get(str(k), "n/d")
+            )
+        else:
+            zone_stats["_valeur_demande"] = zone_stats["_valeur_demande_brute"]
+    else:
+        aggregation_demande = "sum" if indicateur in SUM_INDICATORS else "mean"
+        if group_col is None:
+            valeur_demande_df = pd.DataFrame(
+                {"zone": ["Haïti"], "_valeur_demande": [getattr(df_filtre[indicateur], aggregation_demande)()]}
+            )
+        else:
+            valeur_demande_df = (
+                df_filtre.groupby(group_col, as_index=False)[indicateur]
+                .agg(aggregation_demande)
+                .rename(columns={group_col: "zone", indicateur: "_valeur_demande"})
+            )
+        zone_stats = zone_stats.merge(valeur_demande_df, on="zone", how="left")
+
+    aggregation_offre = "sum" if offre_indicateur in SUM_INDICATORS else "mean"
+    if group_col is None:
+        valeur_offre_df = pd.DataFrame(
+            {"zone": ["Haïti"], "_valeur_offre": [getattr(df_filtre[offre_indicateur], aggregation_offre)()]}
+        )
+    else:
+        valeur_offre_df = (
+            df_filtre.groupby(group_col, as_index=False)[offre_indicateur]
+            .agg(aggregation_offre)
+            .rename(columns={group_col: "zone", offre_indicateur: "_valeur_offre"})
+        )
+    zone_stats = zone_stats.merge(valeur_offre_df, on="zone", how="left")
+
+    if group_col is None:
+        points_df = pd.DataFrame({"zone": ["Haïti"], "_points_acces": [df_filtre[cols_pour_total].sum(axis=1).sum()]})
+    else:
+        points_df = (
+            df_filtre.assign(_pts=df_filtre[cols_pour_total].sum(axis=1))
+            .groupby(group_col, as_index=False)["_pts"]
+            .sum()
+            .rename(columns={group_col: "zone", "_pts": "_points_acces"})
+        )
+    zone_stats = zone_stats.merge(points_df, on="zone", how="left")
+
+    if niveau == "arrondissement":
+        dept_par_arrondissement = (
+            df_filtre.drop_duplicates(subset=[ARRONDISSEMENT_COL]).set_index(ARRONDISSEMENT_COL)[DEPARTEMENT_COL].to_dict()
+        )
+        zone_stats["_departement_parent"] = zone_stats["zone"].map(dept_par_arrondissement)
+
+    ordre_cluster = list(CLUSTER_LABELS_COURT.keys())
+    cluster_cols_ordonnes = [CLUSTER_LABELS_COURT[k] for k in ordre_cluster if CLUSTER_LABELS_COURT[k] in zone_stats.columns]
+
+    def _row_hover(row):
+        if niveau == "pays":
+            identite = ["<b>Haïti</b>"]
+        elif niveau == "departement":
+            identite = [f"<b>Département</b> : {row['zone']}"]
+        else:
+            identite = [
+                f"<b>Département</b> : {row.get('_departement_parent', 'n/d')}",
+                f"<b>Arrondissement</b> : {row['zone']}",
+            ]
+        cluster_lignes = [f"{label} : {row.get(label, 0):.1f}%" for label in cluster_cols_ordonnes]
+        demande_ligne = f"{indicator_label} : {_format_valeur_indicateur(indicateur, row.get('_valeur_demande'))}"
+        offre_lignes = _construire_bloc_offre(
+            offre_label,
+            _format_valeur_indicateur(offre_indicateur, row.get("_valeur_offre")),
+            est_offre_points_acces,
+            row.get("_points_acces", 0),
+            total_points_valeur,
+        )
+        return _construire_hovertext_bloc(identite, cluster_lignes, demande_ligne, offre_lignes)
+
+    zone_stats["_hover"] = zone_stats.apply(_row_hover, axis=1)
 
     if indicateur == "cluster_kmeans":
         zone_stats["couleur"] = zone_stats[cluster_cols].idxmax(axis=1) if cluster_cols else "—"
@@ -542,14 +641,8 @@ def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
                 marker_line_width=0.5,
                 showscale=False,
                 showlegend=False,
-                hovertext=zone_stats["zone"],
-                customdata=zone_stats[["n_communes", "population_totale", "IIFT_moyen"]],
-                hovertemplate=(
-                    "<b>%{hovertext}</b><br>"
-                    "Communes : %{customdata[0]}<br>"
-                    "Population : %{customdata[1]:,.0f}<br>"
-                    "IIFT moyen : %{customdata[2]:.1f}<extra></extra>"
-                ),
+                hovertext=zone_stats["_hover"],
+                hovertemplate="%{hovertext}<extra></extra>",
             )
         )
         _add_legend_traces(fig, labels, palette, zone_stats["_z"])
@@ -591,14 +684,8 @@ def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
                 marker_line_width=0.5,
                 showscale=False,
                 showlegend=False,
-                hovertext=zone_stats["zone"],
-                customdata=zone_stats[["n_communes", "population_totale", "IIFT_moyen"]],
-                hovertemplate=(
-                    "<b>%{hovertext}</b><br>"
-                    "Communes : %{customdata[0]}<br>"
-                    "Population : %{customdata[1]:,.0f}<br>"
-                    "IIFT moyen : %{customdata[2]:.1f}<extra></extra>"
-                ),
+                hovertext=zone_stats["_hover"],
+                hovertemplate="%{hovertext}<extra></extra>",
             )
         )
         _add_legend_traces(fig, ordre, palette, zone_stats["_z"])
@@ -626,6 +713,7 @@ def build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label):
             labels={"valeur": indicator_label},
             **common_kwargs,
         )
+        fig.update_traces(hovertext=zone_stats["_hover"], hovertemplate="%{hovertext}<extra></extra>")
         legend_title = indicator_label
 
     return fig, legend_title
@@ -689,6 +777,58 @@ def _add_legend_traces(fig, labels, palette, z_values):
                 hoverinfo="skip",
             )
         )
+
+
+def _format_entier(valeur):
+    """Formate un nombre en entier avec espace comme séparateur de milliers,
+    ou 'n/d' si la valeur est manquante."""
+    if valeur is None or pd.isna(valeur):
+        return "n/d"
+    return f"{int(round(valeur)):,}".replace(",", " ")
+
+
+def _format_valeur_indicateur(indicateur, valeur):
+    """Formate la valeur affichée pour un indicateur donné dans le survol :
+    texte tel quel pour les catégoriels (cluster_kmeans / classe_IIFT),
+    entier avec séparateur de milliers pour les indicateurs de type "somme"
+    (SUM_INDICATORS — effectifs, populations...), une décimale sinon (taux,
+    indices, densités...)."""
+    if valeur is None or (isinstance(valeur, float) and pd.isna(valeur)):
+        return "n/d"
+    if indicateur in CATEGORICAL_INDICATORS:
+        return str(valeur)
+    if indicateur in SUM_INDICATORS:
+        return _format_entier(valeur)
+    return f"{valeur:,.1f}".replace(",", " ")
+
+
+def _construire_bloc_offre(offre_label, offre_valeur_aff, est_offre_points_acces, points_acces_valeur, total_points_valeur):
+    """Construit les 1 ou 2 lignes du bloc "offre" du survol :
+    - toujours une ligne avec l'indicateur d'offre choisi et sa valeur ;
+    - si cet indicateur EST "Nb de points d'accès" (brh_total_effectif) :
+      une seconde ligne donnant la part (%) que représentent les points
+      d'accès de la zone survolée sur le total national de points d'accès ;
+    - sinon (un autre indicateur d'offre, ex. densité bancaire) : une seconde
+      ligne donnant simplement le nombre brut de points d'accès de la zone,
+      pour ne pas perdre cette information de base.
+    """
+    lignes = [f"{offre_label} : {offre_valeur_aff}"]
+    if est_offre_points_acces:
+        part_pct = (points_acces_valeur * 100 / total_points_valeur) if total_points_valeur else 0
+        lignes.append(f"Part de tous les points d'accès présentés : {part_pct:.1f}%")
+    else:
+        lignes.append(f"Nb de points d'accès : {_format_entier(points_acces_valeur)}")
+    return lignes
+
+
+def _construire_hovertext_bloc(identite, cluster_lignes, demande_ligne, offre_lignes):
+    """Assemble le texte HTML du survol à partir de 3 blocs séparés par une
+    ligne vide : identité géographique (en gras) -> cluster(s) + indicateur
+    de demande -> indicateur(s) d'offre."""
+    bloc_identite = "<br>".join(identite)
+    bloc_milieu = "<br>".join(cluster_lignes + [demande_ligne])
+    bloc_offre = "<br>".join(offre_lignes)
+    return f"{bloc_identite}<br><br>{bloc_milieu}<br><br>{bloc_offre}"
 
 
 def _hex_to_rgb(hex_color):
@@ -893,7 +1033,8 @@ def update_carte(
     types_bruts = [t for t in (type_prestataire or []) if t in TYPE_PRESTATAIRE_LABELS]
     types_selectionnes = [] if not types_bruts or set(types_bruts) == set(TYPE_PRESTATAIRE_LABELS) else types_bruts
     cols_pour_total = types_selectionnes or ["brh_total_effectif"]
-    total_points = f"{int(df[cols_pour_total].sum(axis=1).sum()):,}".replace(",", " ")
+    total_points_valeur = int(df[cols_pour_total].sum(axis=1).sum())
+    total_points = f"{total_points_valeur:,}".replace(",", " ")
     points_selectionnes = f"{int(df_filtre[cols_pour_total].sum(axis=1).sum()):,}".replace(",", " ")
 
     # Un clic direct sur la carte met à jour le store partagé avec la commune
@@ -920,6 +1061,15 @@ def update_carte(
         or INDICATOR_LABELS.get(indicateur, indicateur)
     )
 
+    # [Ajout] Libellé de l'indicateur d'offre et repère "est-ce bien le nombre
+    # brut de points d'accès (brh_total_effectif) qui est choisi ?" — piloté
+    # par la valeur réelle du dropdown offre, jamais par offre_pour_graphique
+    # (qui, lui, peut être remplacé par un type de prestataire précis pour le
+    # diagramme en barres uniquement).
+    offre_indicateur_effectif = offre_indicateur or "brh_total_effectif"
+    offre_label = OFFER_INDICATOR_LABELS.get(offre_indicateur_effectif, offre_indicateur_effectif)
+    est_offre_points_acces = offre_indicateur_effectif == "brh_total_effectif"
+
     if niveau == "commune" or niveau is None:
         common_kwargs = dict(
             geojson=geojson,
@@ -929,8 +1079,41 @@ def update_carte(
             zoom=6.7,
             center={"lat": 18.97, "lon": -72.5},
             opacity=0.85,
-            hover_name="nom_commune",
         )
+
+        # [Ajout] Texte de survol personnalisé, calculé une seule fois pour
+        # les 3 sous-branches ci-dessous (indicateur catégoriel ou continu) :
+        # identité géographique complète (Département / Arrondissement /
+        # Commune, en gras), cluster de la commune, indicateur de demande
+        # choisi, puis indicateur d'offre choisi (+ part du total national de
+        # points d'accès, ou nombre brut de points d'accès selon le cas).
+        df_filtre = df_filtre.copy()
+        df_filtre["_points_acces_ligne"] = df_filtre[cols_pour_total].sum(axis=1)
+
+        def _row_hover_commune(row):
+            identite = [
+                f"<b>Département</b> : {row.get(DEPARTEMENT_COL, 'n/d')}",
+                f"<b>Arrondissement</b> : {row.get(ARRONDISSEMENT_COL, 'n/d')}",
+                f"<b>Commune</b> : {row.get(NOM_COMMUNE_COL, 'n/d')}",
+            ]
+            cluster_lignes = [f"Cluster : {CLUSTER_LABELS_COURT.get(str(row.get('cluster_kmeans')), 'n/d')}"]
+            if indicateur == "cluster_kmeans":
+                valeur_demande_aff = CLUSTER_LABELS_COURT.get(str(row.get("cluster_kmeans")), "n/d")
+            elif indicateur == "classe_IIFT":
+                valeur_demande_aff = row.get("classe_IIFT", "n/d")
+            else:
+                valeur_demande_aff = _format_valeur_indicateur(indicateur, row.get(indicateur))
+            demande_ligne = f"{indicator_label} : {valeur_demande_aff}"
+            offre_lignes = _construire_bloc_offre(
+                offre_label,
+                _format_valeur_indicateur(offre_indicateur_effectif, row.get(offre_indicateur_effectif)),
+                est_offre_points_acces,
+                row.get("_points_acces_ligne", 0),
+                total_points_valeur,
+            )
+            return _construire_hovertext_bloc(identite, cluster_lignes, demande_ligne, offre_lignes)
+
+        df_filtre["_hover"] = df_filtre.apply(_row_hover_commune, axis=1)
 
         if indicateur == "cluster_kmeans":
             # [Correctif] Légende simplifiée : on utilise CLUSTER_LABELS_COURT
@@ -962,13 +1145,8 @@ def update_carte(
                     marker_line_width=0.5,
                     showscale=False,
                     showlegend=False,
-                    hovertext=df_plot["nom_commune"],
-                    customdata=df_plot[["departement", "IIFT"]],
-                    hovertemplate=(
-                        "<b>%{hovertext}</b><br>"
-                        "Département : %{customdata[0]}<br>"
-                        "IIFT : %{customdata[1]:.1f}<extra></extra>"
-                    ),
+                    hovertext=df_plot["_hover"],
+                    hovertemplate="%{hovertext}<extra></extra>",
                 )
             )
             # Légende manuelle : traces scattermapbox invisibles (point à
@@ -1001,13 +1179,8 @@ def update_carte(
                     marker_line_width=0.5,
                     showscale=False,
                     showlegend=False,
-                    hovertext=df_plot["nom_commune"],
-                    customdata=df_plot[["departement", "IIFT"]],
-                    hovertemplate=(
-                        "<b>%{hovertext}</b><br>"
-                        "Département : %{customdata[0]}<br>"
-                        "IIFT : %{customdata[1]:.1f}<extra></extra>"
-                    ),
+                    hovertext=df_plot["_hover"],
+                    hovertemplate="%{hovertext}<extra></extra>",
                 )
             )
             _add_legend_traces(fig, ordre, palette, df_plot["_z"])
@@ -1026,10 +1199,10 @@ def update_carte(
                     COLORS["petrole_500"],
                     COLORS["petrole_900"],
                 ],
-                hover_data={indicateur: ":.2f", "departement": True, "adm2_name": False},
                 labels={indicateur: indicator_label},
                 **common_kwargs,
             )
+            fig.update_traces(hovertext=df_filtre["_hover"], hovertemplate="%{hovertext}<extra></extra>")
             legend_title = indicator_label
     else:
         # Niveaux agrégés (pays / département / arrondissement) : le fond de
@@ -1037,7 +1210,17 @@ def update_carte(
         # trois selon "niveau" ; les indicateurs bruts par commune n'existent
         # plus tels quels ici, ils sont recalculés zone par zone (somme ou
         # moyenne selon SUM_INDICATORS, comme pour le graphique en barres).
-        fig, legend_title = build_choropleth_agrege(df_filtre, niveau, indicateur, indicator_label)
+        fig, legend_title = build_choropleth_agrege(
+            df_filtre,
+            niveau,
+            indicateur,
+            indicator_label,
+            offre_indicateur_effectif,
+            offre_label,
+            est_offre_points_acces,
+            cols_pour_total,
+            total_points_valeur,
+        )
 
     # [Correctif] La légende (indicateurs catégoriels) et la barre de couleur
     # (indicateurs continus) s'affichaient auparavant à côté/par-dessus la

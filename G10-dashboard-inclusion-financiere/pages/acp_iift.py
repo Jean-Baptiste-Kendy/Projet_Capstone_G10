@@ -27,7 +27,7 @@ def layout():
         )
 
     dim1_variance = valeurs_propres.loc[valeurs_propres["axe"] == "Dim1", "variance_expliquee_pct"].iloc[0]
-    top5_cumulee = valeurs_propres.iloc[4]["variance_cumulee_pct"] if len(valeurs_propres) >= 5 else None
+    top6_cumulee = valeurs_propres.iloc[5]["variance_cumulee_pct"] if len(valeurs_propres) >= 6 else None
     moyenne_iift = iift["IIFT"].mean()
     n_tres_eleve = (iift["classe_IIFT"] == "Très élevé").sum()
 
@@ -86,7 +86,7 @@ def layout():
             ),
             build_kpi_row([
                 {"label": "Variance Dim1", "value": f"{dim1_variance:.1f}%"},
-                {"label": "Variance cumulée (5 axes)", "value": f"{top5_cumulee:.1f}%" if top5_cumulee else "n/d"},
+                {"label": "Variance cumulée (6 axes)", "value": f"{top6_cumulee:.1f}%" if top6_cumulee else "n/d"},
                 {"label": "IIFT moyen national", "value": f"{moyenne_iift:.1f}", "accent": True},
                 {"label": "Communes 'Très élevé'", "value": str(n_tres_eleve)},
             ]),

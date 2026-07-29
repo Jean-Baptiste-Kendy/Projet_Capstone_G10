@@ -80,13 +80,13 @@ def layout():
                 },
                 {
                     "label": "Variables mobilisées",
-                    "value": "56",
-                    "sublabel": "après réduction depuis 57 variables sources",
+                    "value": "57",
+                    "sublabel": "4 Identifiants/ 38 Quantitatives/ 15 Qualitatives",
                 },
                 {
                     "label": "Sources croisées",
-                    "value": "4",
-                    "sublabel": "BRH, IHSI, OCHA, BID/World Bank",
+                    "value": "5",
+                    "sublabel": "BRH, IHSI, OCHA, BID/World Bank, OpenStreetMap",
                 },
             ]),
 
@@ -113,7 +113,7 @@ def layout():
                 children=[
                     html.H3("Pourquoi notre solution est crédible"),
                     html.Ul(children=[
-                        html.Li("Couverture exhaustive des 140 communes et croisement de sources institutionnelles : BRH, IHSI, OCHA et Banque mondiale / BID."),
+                        html.Li("Couverture exhaustive des 140 communes et croisement de sources institutionnelles : BRH, IHSI, OCHA, Banque mondiale / BID et OpenStreetMap."),
                         html.Li("Méthodes complémentaires : ACP pour construire l'IIFT, K-Means pour segmenter, AFCM pour interpréter les profils et modélisation pour vérifier la cohérence interne."),
                         html.Li("Résultats transparents et auditables : sources, choix méthodologiques et limites sont documentés dans l'onglet Méthodologie."),
                     ]),
