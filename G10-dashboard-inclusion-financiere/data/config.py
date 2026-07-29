@@ -32,6 +32,8 @@ PATHS = {
 
     "matrice_globale": f"{GITHUB_RAW_BASE}/data/processed/G10_Matrice_Donnees_Finale.csv",
     "geojson_communes": f"{GITHUB_RAW_BASE}/data/raw/hti_admin_boundaries/hti_admin2.geojson",
+    "geojson_departements": f"{GITHUB_RAW_BASE}/data/raw/hti_admin_boundaries/hti_admin1.geojson",
+    "geojson_pays": f"{GITHUB_RAW_BASE}/data/raw/hti_admin_boundaries/hti_admin0.geojson",
     "points_brh_geo_csv": f"{GITHUB_RAW_BASE}/data/processed/G10_points_brh_geo.csv",
     "points_brh_geo_geojson": f"{GITHUB_RAW_BASE}/data/processed/G10_points_brh_geo.geojson",
     "brh_services": f"{GITHUB_RAW_BASE}/data/raw/G10_Donnees2017_Services_Financiers_BRH.xlsx",
@@ -117,6 +119,18 @@ CORRESPONDANCE_NOMS_MANUELLE = {
 }
 
 # ---------------------------------------------------------------------------
+# Niveau géographique "département" (hti_admin1.geojson)
+# ---------------------------------------------------------------------------
+# adm1_name1 (nom français du geojson OCHA) correspond aux valeurs de
+# DEPARTEMENT_COL dans la matrice, à une seule exception près (vérifié par
+# comparaison directe des 10 valeurs des deux côtés le 26/07/2026).
+GEOJSON_DEPT_NAME_PROPERTY = "adm1_name1"  # nom français ; adm1_name (sans le 1) est en anglais
+CORRESPONDANCE_DEPARTEMENTS_MANUELLE = {
+    # "nom_dans_matrice": "nom_dans_geojson (adm1_name1, valeur exacte)"
+    "Grand'Anse": "Grande'Anse",
+}
+
+# ---------------------------------------------------------------------------
 # Charte graphique — bleu-pétrole / terracotta
 # ---------------------------------------------------------------------------
 COLORS = {
@@ -178,17 +192,43 @@ CLUSTER_STATS = {
 # identifiant numérique brut) : c'est cet ordre qui pilote category_orders
 # dans les graphiques (clustering_afcm.py, carte.py) — les 3 clusters
 # apparaissent donc dans le bon sens de lecture partout, pas dans l'ordre 0/1/2.
+# Format volontairement "Terminologie financière courte — détail statistique",
+# séparés par un tiret cadratin (—) : plusieurs pages (clustering_afcm.py)
+# font `CLUSTER_LABELS[k].split("—")[0].strip()` pour n'afficher que le terme
+# court dans les tableaux compacts — NE PAS retirer ce séparateur ni changer
+# sa position sans mettre à jour ces appels.
+#
+# [Important — distinction à ne jamais mélanger] "classe_IIFT" (page ACP/IIFT,
+# CLASSE_IIFT_ORDER plus haut) et le clustering K-Means ci-dessous sont DEUX
+# classifications DIFFÉRENTES, qui n'ont pas les mêmes catégories :
+#   - classe_IIFT    : 5 niveaux (Très faible/Faible/Moyen/Élevé/Très élevé),
+#                      quantiles du score IIFT CONTINU seul (1 seule variable).
+#   - cluster_kmeans : 3 groupes, clustering MULTIVARIÉ sur tous les axes ACP
+#                      retenus (pas seulement Dim1/IIFT).
+# D'où "Cluster K-Means" (et jamais "Classe IIFT") dans les libellés
+# ci-dessous — une version précédente réutilisait "Classe IIFT" pour les deux,
+# ce qui laissait croire au jury qu'il s'agissait de la même échelle à 5
+# niveaux découpée différemment, alors que ce sont deux analyses distinctes
+# (l'une univariée sur la cible IIFT, l'autre non supervisée multivariée).
+#
+# Terminologie alignée sur le vocabulaire standard de l'inclusion financière
+# (Banque Mondiale, CGAP, BID) plutôt que sur des étiquettes génériques
+# "Cluster 0/1/2", illisibles pour un public non technique (jury, décideurs).
+# Ordre du dict volontairement 0 -> 2 -> 1 (par sévérité croissante, pas par
+# identifiant numérique brut) : c'est cet ordre qui pilote category_orders
+# dans les graphiques (clustering_afcm.py, carte.py) — les 3 clusters
+# apparaissent donc dans le bon sens de lecture partout, pas dans l'ordre 0/1/2.
 CLUSTER_LABELS = {
     "0": (
-        "Zones d'exclusion financière — Classe IIFT Très faible "
+        "Zones d'exclusion financière — Cluster K-Means Très faible "
         "(IIFT moy. 13 ; Dim1 moy. -1,95 ; n=74)"
     ),
     "2": (
-        "Zones d'inclusion financière émergente — Classe IIFT Moyen "
+        "Zones d'inclusion financière émergente — Cluster K-Means Moyen "
         "(IIFT moy. 33 ; Dim1 moy. 0,68 ; n=49)"
     ),
     "1": (
-        "Pôles d'inclusion financière avancée — Classe IIFT Extrême "
+        "Pôles d'inclusion financière avancée — Cluster K-Means Extrême "
         "(IIFT moy. 75 ; Dim1 moy. 6,53 ; n=17)"
     ),
 }
@@ -305,24 +345,34 @@ GROUPES_SERVICES = {
 }
 
 BRH_SERVICE_INDICATOR_LABELS = {
-    "brh_total_points": "Points de service BRH — Total",
-    "brh_maison_transfert": "Points BRH — Maison de transfert",
-    "brh_agent_non_bancaire": "Points BRH — Agent non bancaire",
-    "brh_banque": "Points BRH — Banque",
-    "brh_atm": "Points BRH — ATM",
-    "brh_microfinance": "Points BRH — Microfinance",
-    "brh_caisse_populaire": "Points BRH — Caisse populaire",
+    "brh_total_points": "Total (tous types)",
+    "brh_maison_transfert": "Maison de transfert",
+    "brh_agent_non_bancaire": "Agent non bancaire",
+    "brh_banque": "Banque",
+    "brh_atm": "ATM",
+    "brh_microfinance": "Microfinance",
+    "brh_caisse_populaire": "Caisse populaire",
 }
 
 OFFER_INDICATOR_LABELS = {
     "brh_total_effectif": "Nb de points d'accès",
     "densite_bancaire_10k": "Nb de points d'accès pour 10 000 habitants",
-    "brh_maison_transfert": "Points — Maison de transfert",
-    "brh_agent_non_bancaire": "Points — Agent non bancaire",
-    "brh_banque": "Points — Banque",
-    "brh_atm": "Points — ATM",
-    "brh_microfinance": "Points — Microfinance",
-    "brh_caisse_populaire": "Points — Caisse populaire",
+}
+
+# [Correctif] Les 6 types de prestataires (auparavant mélangés dans le
+# dropdown "Indicateur d'offre" ci-dessus) ont désormais leur propre sélecteur
+# "Type prestataire" — colonnes telles qu'elles existent dans
+# G10_Matrice_Donnees_Finale.csv (brh_maison_de_transfert avec "de", à ne pas
+# confondre avec brh_maison_transfert recalculé depuis brh_services.xlsx dans
+# data/loaders.py — les deux existent dans get_matrice_carte(), celui-ci
+# utilise volontairement la colonne de la matrice).
+TYPE_PRESTATAIRE_LABELS = {
+    "brh_agent_non_bancaire": "Agent non bancaire",
+    "brh_banque": "Banque",
+    "brh_maison_de_transfert": "Maison de transfert",
+    "brh_atm": "ATM",
+    "brh_microfinance": "IMF",
+    "brh_caisse_populaire": "Caisse populaire",
 }
 
 DEMAND_INDICATOR_LABELS = {
@@ -360,7 +410,7 @@ DEMAND_INDICATOR_LABELS = {
 }
 
 SUM_INDICATORS = {
-    "brh_total_effectif", *BRH_SERVICE_INDICATOR_LABELS,
+    "brh_total_effectif", *BRH_SERVICE_INDICATOR_LABELS, *TYPE_PRESTATAIRE_LABELS,
     "superficie_km2", "superficie_rurale_km2", "superficie_urbaine_km2",
     "nb_menages", "nb_menages_ruraux", "nb_menages_urbains",
     "population_totale", "pop_feminine", "pop_masculine", "population_rurale",

@@ -25,8 +25,13 @@ from data.config import (
     PATHS,
     ID_COMMUNE_COL,
     NOM_COMMUNE_COL,
+    DEPARTEMENT_COL,
+    ARRONDISSEMENT_COL,
     GEOJSON_NAME_PROPERTY,
+    GEOJSON_DEPT_NAME_PROPERTY,
     CORRESPONDANCE_NOMS_MANUELLE,
+    CORRESPONDANCE_DEPARTEMENTS_MANUELLE,
+    CLUSTER_LABELS_COURT,
     GROUPES_SERVICES,
 )
 
@@ -166,6 +171,120 @@ def load_geojson_communes() -> dict:
     return _safe_read_geojson(PATHS["geojson_communes"], "geojson_communes")
 
 
+@lru_cache(maxsize=1)
+def load_geojson_departements() -> dict:
+    """Contours officiels des 10 départements (hti_admin1.geojson, OCHA)."""
+    return _safe_read_geojson(PATHS["geojson_departements"], "geojson_departements")
+
+
+@lru_cache(maxsize=1)
+def load_geojson_pays() -> dict:
+    """Contour national unique (hti_admin0.geojson, OCHA)."""
+    return _safe_read_geojson(PATHS["geojson_pays"], "geojson_pays")
+
+
+@lru_cache(maxsize=1)
+def load_geojson_arrondissements() -> dict:
+    """
+    Contours des 42 arrondissements, obtenus en fusionnant (dissolve) les
+    polygones commune (hti_admin2.geojson) qui partagent le même arrondissement
+    (colonne ARRONDISSEMENT_COL de la matrice, source IHSI) — aucun geojson
+    "arrondissement" natif n'existe dans la hiérarchie OCHA (pays -> département
+    -> commune, l'arrondissement n'est qu'une strate intermédiaire côté IHSI).
+
+    La correspondance commune -> arrondissement passe par adm2_name, la même
+    clé de jointure déjà fiabilisée par build_nom_commune_to_adm2name().
+    """
+    from shapely.geometry import shape, mapping as shapely_mapping
+    from shapely.ops import unary_union
+
+    communes_geojson = load_geojson_communes()
+    df = get_matrice_avec_geojson_name()[["adm2_name", ARRONDISSEMENT_COL]].dropna()
+    arrondissement_par_adm2 = dict(zip(df["adm2_name"], df[ARRONDISSEMENT_COL]))
+
+    geometries_par_arrondissement: dict[str, list] = {}
+    for feature in communes_geojson["features"]:
+        adm2_name = feature["properties"].get(GEOJSON_NAME_PROPERTY)
+        arrondissement = arrondissement_par_adm2.get(adm2_name)
+        if arrondissement is None:
+            continue
+        geometries_par_arrondissement.setdefault(arrondissement, []).append(shape(feature["geometry"]))
+
+    features = [
+        {
+            "type": "Feature",
+            "properties": {"arrondissement": arrondissement},
+            "geometry": shapely_mapping(unary_union(geometries)),
+        }
+        for arrondissement, geometries in geometries_par_arrondissement.items()
+    ]
+    logger.info(f"[OK] geojson_arrondissements construit par dissolve : {len(features)} arrondissements")
+    return {"type": "FeatureCollection", "features": features}
+
+
+@lru_cache(maxsize=1)
+def build_nom_departement_to_adm1name() -> dict:
+    """Construit le dict departement (matrice) -> adm1_name1 (geojson), même
+    principe que build_nom_commune_to_adm2name() mais pour le niveau département."""
+    df = load_matrice_globale()
+    geojson = load_geojson_departements()
+
+    noms_geojson = [f["properties"][GEOJSON_DEPT_NAME_PROPERTY] for f in geojson["features"]]
+    norm_to_geojson = {_normalize_nom(n): n for n in noms_geojson}
+
+    mapping = {}
+    for nom in df[DEPARTEMENT_COL].dropna().unique():
+        if nom in CORRESPONDANCE_DEPARTEMENTS_MANUELLE:
+            mapping[nom] = CORRESPONDANCE_DEPARTEMENTS_MANUELLE[nom]
+            continue
+        norm = _normalize_nom(nom)
+        mapping[nom] = norm_to_geojson.get(norm)
+    return mapping
+
+
+def build_zone_stats(df: pd.DataFrame, niveau: str) -> pd.DataFrame:
+    """
+    Agrège get_matrice_carte() (déjà filtrée) par zone géographique — une ligne
+    par département/arrondissement/pays — avec les indicateurs affichés au
+    survol de la carte à ces niveaux : population totale, IIFT moyen, nombre de
+    communes, et % de communes dans chaque cluster K-Means (composition, pas
+    juste le cluster majoritaire, pour ne rien cacher de l'hétérogénéité interne
+    à la zone).
+    """
+    group_col = {
+        "departement": DEPARTEMENT_COL,
+        "arrondissement": ARRONDISSEMENT_COL,
+        "pays": None,
+    }.get(niveau)
+
+    df = df.copy()
+    if group_col is None:
+        df["_zone"] = "Haïti"
+        group_col = "_zone"
+
+    base = (
+        df.groupby(group_col)
+        .agg(
+            n_communes=(NOM_COMMUNE_COL, "count"),
+            population_totale=("population_totale", "sum"),
+            IIFT_moyen=("IIFT", "mean"),
+            brh_total_points=("brh_total_points", "sum"),
+        )
+        .reset_index()
+        .rename(columns={group_col: "zone"})
+    )
+
+    composition = (
+        df.groupby([group_col, "cluster_kmeans"]).size().rename("n").reset_index()
+    )
+    composition["pct"] = composition.groupby(group_col)["n"].transform(lambda s: (s / s.sum() * 100).round(1))
+    composition["cluster_label"] = composition["cluster_kmeans"].map(CLUSTER_LABELS_COURT)
+    pivot = composition.pivot(index=group_col, columns="cluster_label", values="pct").fillna(0).reset_index()
+    pivot = pivot.rename(columns={group_col: "zone"})
+
+    return base.merge(pivot, on="zone", how="left")
+
+
 # ---------------------------------------------------------------------------
 # Chargement global au démarrage — appelé une fois depuis app.py
 # ---------------------------------------------------------------------------
@@ -294,7 +413,18 @@ def get_matrice_carte() -> pd.DataFrame:
     df["population_18_plus_rurale"] = df["population_18_plus"] - df["population_18_plus_urbaine"]
 
     def ratio(numerator, denominator):
-        return numerator.div(denominator.replace(0, pd.NA))
+        # [Correctif] float("nan") au lieu de pd.NA : quand le dénominateur
+        # vaut 0 pour au moins une commune (ex. communes 100% urbaines comme
+        # Delmas/Cité Soleil/Tabarre, où la population RURALE = 0), remplacer
+        # par pd.NA fait basculer toute la colonne en dtype "object" (pandas
+        # ne peut pas représenter pd.NA dans une colonne numérique classique).
+        # Plotly ne sait alors plus calculer le dégradé de couleur sur cette
+        # colonne et lève une erreur (ex. "Ratio genre (rural, ...)").
+        # float("nan") reste un NaN flottant standard : la colonne garde le
+        # dtype float64, pleinement compatible avec Plotly (et avec .mean()/
+        # .groupby() utilisés ailleurs pour l'agrégation département/
+        # arrondissement).
+        return numerator.div(denominator.replace(0, float("nan")))
 
     df["part_rurale_superficie_pct"] = ratio(df["superficie_rurale_km2"], df["superficie_km2"]) * 100
     df["part_rurale_population_pct"] = ratio(df["population_rurale"], df["population_totale"]) * 100
