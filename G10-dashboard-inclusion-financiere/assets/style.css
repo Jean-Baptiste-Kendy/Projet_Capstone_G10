@@ -148,6 +148,18 @@ h1, h2, h3, h4 {
   gap: 16px;
 }
 
+/* [Ajout] Variante empilée : les 2 blocs KPI (Total points/type et
+   Sélectionné) l'un AU-DESSUS de l'autre plutôt que côte à côte. */
+.filter-group-kpi-stack {
+  margin-left: auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group-kpi-stack .filter-kpi-block {
+  min-width: 140px;
+}
+
 .filter-kpi-block {
   background: var(--background);
   border: 1px solid var(--border);
