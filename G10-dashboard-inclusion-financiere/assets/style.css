@@ -1,0 +1,751 @@
+/* ============================================================
+   Charte graphique — Inclusion Financière en Haïti
+   Bleu-pétrole / terracotta — cohérent avec les figures des notebooks
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap');
+
+:root {
+  --petrole-900: #0F2E38;
+  --petrole-700: #1B4B5A;
+  --petrole-500: #2C6E7F;
+  --petrole-200: #B9D4D9;
+  --terracotta-700: #B14A22;
+  --terracotta-500: #C1622D;
+  --terracotta-300: #E0A87C;
+  --background: #F6F4EF;
+  --surface: #FFFFFF;
+  --text-primary: #1F2D30;
+  --text-secondary: #5B6B6E;
+  --border: #DDE3E1;
+
+  --font-display: 'IBM Plex Sans', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  color: var(--petrole-900);
+  font-weight: 600;
+  margin-top: 0;
+}
+
+/* ---------------- Navbar ---------------- */
+
+.navbar {
+  background: var(--petrole-900);
+  border-bottom: 3px solid var(--terracotta-500);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 60px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+.navbar-brand-mark {
+  background: var(--terracotta-500);
+  color: #fff;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 3px 7px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+}
+
+.navbar-brand-text {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.navbar-links {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.nav-link {
+  color: var(--petrole-200);
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.nav-link:hover {
+  background: var(--petrole-700);
+  color: #fff;
+}
+
+/* ---------------- Filter bar (pattern BRH) ---------------- */
+
+.filter-bar {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.filter-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.filter-radio-label {
+  font-size: 13px;
+  margin-right: 12px;
+  color: var(--text-primary);
+}
+
+.filter-group-kpi {
+  margin-left: auto;
+  flex-direction: row;
+  gap: 16px;
+}
+
+/* [Ajout] Variante empilée : les 2 blocs KPI (Total points/type et
+   Sélectionné) l'un AU-DESSUS de l'autre plutôt que côte à côte. */
+.filter-group-kpi-stack {
+  margin-left: auto;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-group-kpi-stack .filter-kpi-block {
+  min-width: 140px;
+}
+
+.filter-kpi-block {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  text-align: center;
+  min-width: 90px;
+}
+
+.filter-kpi-block-accent {
+  background: rgba(193, 98, 45, 0.08);
+  border-color: var(--terracotta-300);
+}
+
+.filter-kpi-label {
+  display: block;
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.filter-kpi-value {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--petrole-700);
+}
+
+.filter-kpi-block-accent .filter-kpi-value {
+  color: var(--terracotta-700);
+}
+
+/* ---------------- KPI cards (page d'accueil, etc.) ---------------- */
+
+.kpi-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--petrole-700);
+  border-radius: 6px;
+  padding: 16px 20px;
+  flex: 1;
+  min-width: 180px;
+}
+
+.kpi-card-accent {
+  border-left-color: var(--terracotta-500);
+}
+
+.kpi-card-value {
+  font-family: var(--font-mono);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--petrole-900);
+}
+
+.kpi-card-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.kpi-card-sublabel {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* ---------------- Page container ---------------- */
+
+.page-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: calc(100vh - 60px - 90px);
+}
+
+/* ---------------- Carte interactive : carte + analyse latérale ---------------- */
+
+.map-analysis-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
+  gap: 16px;
+  align-items: start;
+}
+
+.map-indicator-selectors {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+  max-width: 900px;
+}
+
+@media (max-width: 650px) {
+  .map-indicator-selectors {
+    grid-template-columns: 1fr;
+  }
+}
+
+.map-analysis-grid .chart-panel-header {
+  min-height: 40px;
+  box-sizing: border-box;
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--petrole-900);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.map-side-chart-body {
+  max-height: 650px;
+  overflow-y: auto;
+  padding: 8px 12px 12px;
+}
+
+@media (max-width: 900px) {
+  .map-analysis-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---------------- Footer ---------------- */
+
+.footer {
+  background: var(--petrole-900);
+  color: var(--petrole-200);
+  margin-top: 40px;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.footer-cohorte, .footer-equipe, .footer-superviseur {
+  margin: 2px 0;
+}
+
+.footer-link {
+  color: var(--terracotta-300);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.footer-link:hover {
+  text-decoration: underline;
+}
+
+/* ---------------- Carousel storytelling (page Accueil) ---------------- */
+
+.carousel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.carousel-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.carousel-btn {
+  background: var(--petrole-900);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.carousel-btn:hover {
+  background: var(--terracotta-500);
+}
+
+.carousel-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  display: inline-block;
+}
+
+.carousel-dot-active {
+  background: var(--terracotta-500);
+}
+
+.carousel-card {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto;
+  min-height: 100px;
+}
+
+.carousel-card h4 {
+  color: var(--petrole-900);
+  margin-bottom: 10px;
+}
+
+.carousel-card p {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* ---------------- Méthodologie : listes ---------------- */
+
+.methodo-list {
+  padding-left: 20px;
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.methodo-list li {
+  margin-bottom: 8px;
+}
+
+/* ---------------- Barre d'onglets principale (navigation single-page) ---------------- */
+
+.main-tabbar {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 60px;
+  z-index: 90;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.main-tabbar .tab-parent-container,
+.main-tabbar > div {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ---------------- Grille de dashboard (façon Power BI / Tableau) ---------------- */
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 900px) {
+  .dash-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.chart-panel {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-panel-full {
+  grid-column: 1 / -1;
+}
+
+.chart-panel-header {
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.chart-panel-title {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--petrole-900);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.chart-panel-caption {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.chart-panel-body {
+  padding: 8px 12px 12px;
+  flex: 1;
+  overflow: auto;
+  max-height: 360px;
+}
+
+.chart-panel-body table.fiche-table {
+  max-width: none;
+  font-size: 12px;
+}
+
+/* Page header compact (remplace H1 + long paragraphe) */
+.page-header-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+.page-header-row h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+/* ---------------- Accueil : impact et priorisation ---------------- */
+
+.impact-hero {
+  background: var(--petrole-900);
+  color: #fff;
+  border-radius: 10px;
+  padding: 28px 32px;
+  margin: 4px 0 24px;
+  border-left: 5px solid var(--terracotta-500);
+}
+
+.impact-hero h2 {
+  color: #fff;
+  font-size: 23px;
+  margin: 5px 0 10px;
+}
+
+.impact-hero p {
+  max-width: 930px;
+  margin: 0 0 10px;
+  color: #edf4f3;
+  font-size: 14px;
+}
+
+.impact-eyebrow {
+  color: var(--terracotta-300);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+}
+
+.impact-question {
+  color: #fff !important;
+  font-weight: 600;
+  margin-bottom: 0 !important;
+}
+
+.section-title {
+  margin: 28px 0 12px;
+  font-size: 17px;
+}
+
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.impact-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-top: 4px solid var(--petrole-700);
+  border-radius: 8px;
+  padding: 18px;
+}
+
+.impact-card-action { border-top-color: var(--terracotta-500); }
+.impact-card h4 { font-size: 15px; margin-bottom: 8px; }
+.impact-card p { color: var(--text-secondary); font-size: 13px; margin: 0; }
+
+.credibility-note {
+  background: rgba(44, 110, 127, 0.08);
+  border: 1px solid var(--petrole-200);
+  border-radius: 8px;
+  margin-top: 28px;
+  padding: 20px 24px;
+}
+
+.credibility-note h3 { font-size: 16px; margin-bottom: 8px; }
+.credibility-note ul { margin: 0 0 10px; padding-left: 20px; font-size: 13px; }
+.credibility-note li { margin-bottom: 6px; }
+.credibility-caveat { color: var(--text-secondary); font-size: 12px; margin: 0; }
+
+@media (max-width: 900px) {
+  .impact-grid { grid-template-columns: 1fr; }
+  .impact-hero { padding: 22px; }
+}
+
+.page-header-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ---------------- Fiche commune : tableau d'indicateurs ---------------- */
+
+.fiche-table {
+  width: 100%;
+  max-width: 800px;
+  border-collapse: collapse;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.fiche-table th {
+  background: var(--petrole-900);
+  color: #fff;
+  text-align: left;
+  padding: 10px 14px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.fiche-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.fiche-table tr:last-child td {
+  border-bottom: none;
+}
+
+.fiche-table tr:hover td {
+  background: var(--background);
+}
+
+.fiche-table-label {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.fiche-table-value {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--petrole-700);
+}
+
+.fiche-table-delta {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* ---------------- Fiche commune : liste déroulante des clusters ---------------- */
+
+.fiche-clusters-section {
+  margin-top: 32px;
+}
+
+.fiche-clusters-title {
+  font-size: 18px;
+  margin: 0 0 4px;
+}
+
+.fiche-clusters-caption {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0 0 12px;
+}
+
+.cluster-accordion {
+  max-width: 980px;
+  display: grid;
+  gap: 10px;
+}
+
+.cluster-details {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  overflow: hidden;
+}
+
+.cluster-details summary {
+  cursor: pointer;
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+}
+
+.cluster-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.cluster-details summary::before {
+  content: "›";
+  color: var(--terracotta-500);
+  font-size: 22px;
+  line-height: 12px;
+  transform: rotate(0deg);
+  transition: transform 0.15s ease;
+}
+
+.cluster-details[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.cluster-summary-id {
+  color: var(--petrole-900);
+  font-family: var(--font-display);
+  font-weight: 700;
+}
+
+.cluster-summary-label {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.cluster-summary-count {
+  margin-left: auto;
+  color: var(--terracotta-700);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.cluster-table-wrap {
+  border-top: 1px solid var(--border);
+  max-height: 380px;
+  overflow: auto;
+}
+
+.fiche-cluster-table {
+  max-width: none;
+}
+
+.delta-positive {
+  color: var(--petrole-500);
+}
+
+.delta-negative {
+  color: var(--terracotta-700);
+}
+
+/* ---------------- États d'erreur / vide (robustesse) ---------------- */
+
+.error-banner {
+  background: rgba(177, 74, 34, 0.08);
+  border: 1px solid var(--terracotta-500);
+  border-radius: 6px;
+  padding: 14px 18px;
+  color: var(--terracotta-700);
+  font-size: 13px;
+  margin-bottom: 16px;
+}
+
+.loading-placeholder {
+  color: var(--text-secondary);
+  font-size: 13px;
+  padding: 40px;
+  text-align: center;
+}
