@@ -1,0 +1,7 @@
+dash>=4.0.0,<5.0
+plotly>=5.22
+pandas>=2.2
+openpyxl>=3.1
+shapely>=2.0
+requests>=2.31
+gunicorn>=22.0
