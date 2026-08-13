@@ -43,6 +43,36 @@ app = dash.Dash(
 
 server = app.server  # nécessaire pour le déploiement (gunicorn ciblera app:server)
 
+# [Modifié] Viewport FIXE (comme le site cartographique de la BRH,
+# brh.ht/cartographie, ou n'importe quel tableau Tableau/PowerBI embarqué) :
+# au lieu de "width=device-width" (qui laisse le CSS responsive réorganiser
+# la page selon la largeur réelle de l'écran), on fixe la largeur virtuelle
+# du viewport à 1280px — la largeur de conception du site (cf. .page-container
+# dans assets/style.css). Le téléphone affiche alors TOUJOURS la même mise en
+# page qu'un ordinateur, simplement réduite à l'échelle de l'écran ; les
+# `@media (max-width: ...)` du CSS ne se déclenchent plus jamais (puisque, du
+# point de vue du CSS, l'écran fait "1280px" quel que soit l'appareil). Le
+# zoom tactile (pincer-zoomer) reste actif pour lire un détail de près, puis
+# glisser pour voir le reste — comme sur le site de référence.
+app.index_string = """<!DOCTYPE html>
+<html>
+    <head>
+        {%metas%}
+        <title>{%title%}</title>
+        {%favicon%}
+        {%css%}
+        <meta name="viewport" content="width=1280, user-scalable=yes">
+    </head>
+    <body>
+        {%app_entry%}
+        <footer>
+            {%config%}
+            {%scripts%}
+            {%renderer%}
+        </footer>
+    </body>
+</html>"""
+
 # ---------------------------------------------------------------------------
 # Import des modules de pages APRÈS la création de `app` : leurs @callback
 # doivent s'enregistrer sur une app déjà instanciée.
