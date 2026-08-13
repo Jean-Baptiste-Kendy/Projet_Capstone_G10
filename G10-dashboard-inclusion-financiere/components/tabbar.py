@@ -53,6 +53,14 @@ def build_tabbar(default_value: str = "accueil"):
         id="main-tabs",
         value=default_value,
         className="main-tabbar",
+        # [Correctif mobile] Par défaut, dcc.Tabs bascule automatiquement en
+        # liste verticale plein-largeur (un onglet par ligne, empilés) en
+        # dessous de 800px de large — c'est ce qui donnait l'impression que
+        # les onglets s'affichaient "l'un sur l'autre" sur téléphone. On
+        # désactive ce seuil (mobile_breakpoint=0) pour garder la barre
+        # toujours horizontale, avec défilement latéral (voir .main-tabbar
+        # dans assets/style.css : overflow-x: auto).
+        mobile_breakpoint=0,
         children=[
             dcc.Tab(label=label, value=val, style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE)
             for val, label in TABS
