@@ -68,6 +68,8 @@ h1, h2, h3, h4 {
   gap: 10px;
   color: #fff;
   font-family: var(--font-display);
+  min-width: 0; /* [Correctif mobile] autorise le flex-item à rétrécir pour que l'ellipsis ci-dessous fonctionne */
+  overflow: hidden;
 }
 
 .navbar-brand-mark {
@@ -83,6 +85,23 @@ h1, h2, h3, h4 {
 .navbar-brand-text {
   font-weight: 600;
   font-size: 15px;
+  /* [Correctif mobile] .navbar a une hauteur fixe (60px) et .main-tabbar est
+     collé juste en dessous via `top: 60px`. Si ce texte passait à la ligne
+     (écran étroit), il débordait de ces 60px et se superposait à la barre
+     d'onglets / au contenu. On l'empêche de wrapper et on tronque proprement
+     plutôt que de déborder. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (max-width: 480px) {
+  .navbar-brand-text {
+    font-size: 12px;
+  }
+  .navbar-inner {
+    padding: 0 12px;
+  }
 }
 
 .navbar-links {
