@@ -28,6 +28,7 @@ def layout():
             dcc.Tabs(
                 id="methodo-tabs",
                 value="sources",
+                mobile_breakpoint=0,  # [Correctif mobile] même correctif que la barre d'onglets principale
                 children=[
                     dcc.Tab(label="Sources", value="sources", style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
                     dcc.Tab(label="Principes clés", value="principes", style=TAB_STYLE, selected_style=TAB_SELECTED_STYLE),
